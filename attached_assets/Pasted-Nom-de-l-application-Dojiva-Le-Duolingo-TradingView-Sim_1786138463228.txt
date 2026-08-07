@@ -1,0 +1,720 @@
+Nom de l’application  Dojiva 
+
+Le Duolingo + TradingView + Simulateur de trading
+
+Objectif
+
+Permettre à une personne totalement débutante de :
+
+* Comprendre les marchés financiers
+* Apprendre les concepts du trading et de l’investissement
+* Lire des graphiques
+* Construire ses propres stratégies
+* S’entraîner avec un simulateur
+* Progresser avec un coach IA personnalisé
+
+⚠️ L’application est un outil d’apprentissage et de simulation. Elle ne promet aucun gain financier.
+
+⸻
+
+🧭 ARCHITECTURE DE L’APPLICATION
+
+L’application repose sur 5 piliers :
+
+1. 🎓 Académie
+
+Le parcours d’apprentissage gamifié façon Duolingo.
+
+2. 📊 Laboratoire
+
+Créer, modifier et tester ses propres stratégies.
+
+3. 🎮 Simulateur
+
+S’entraîner sur des graphiques historiques avec capital virtuel.
+
+4. 🤖 Coach IA
+
+Analyser ses erreurs et personnaliser son apprentissage.
+
+5. 📒 Journal
+
+Suivre ses performances, ses décisions et sa progression.
+
+⸻
+
+🚀 ONBOARDING INTELLIGENT
+
+L’utilisateur ne connaît rien.
+
+Écran 1
+
+Bienvenue 👋
+
+Apprends à comprendre les marchés étape par étape.
+
+Question :
+
+Qu’aimerais-tu apprendre ?
+
+Cartes :
+
+📈 Comprendre les marchés
+
+💰 Investir pour le long terme
+
+⚡ Apprendre le trading
+
+📊 Lire des graphiques
+
+🌎 Tout apprendre
+
+⸻
+
+Écran 2
+
+Quel est ton niveau ?
+
+🌱 Débutant complet
+
+“Je pars de zéro.”
+
+📚 Intermédiaire
+
+“Je connais quelques bases.”
+
+🔥 Expérimenté
+
+“Je pratique déjà.”
+
+⸻
+
+Écran 3
+
+Quels marchés t’intéressent ?
+
+₿ Crypto
+
+Bitcoin, Ethereum, actifs numériques
+
+🏢 Actions
+
+Entreprises et marchés boursiers
+
+💱 Forex
+
+Devises internationales
+
+📊 Indices
+
+NASDAQ, S&P500, CAC40…
+
+🛢️ Matières premières
+
+Or, pétrole…
+
+🌎 Tous les marchés
+
+⸻
+
+Écran 4
+
+Quel style veux-tu découvrir ?
+
+⚡ Scalping
+
+Trades rapides
+
+📈 Day Trading
+
+Trades dans la journée
+
+🌙 Swing Trading
+
+Positions sur plusieurs jours
+
+🏦 Investissement
+
+Construction long terme
+
+⸻
+
+L’IA crée :
+
+“Ton parcours personnalisé est prêt”
+
+⸻
+
+🎓 ACADÉMIE
+
+Interface :
+
+* Chemin vertical
+* Bulles de progression
+* XP
+* Niveaux
+* Séries quotidiennes
+* Badges
+
+Chaque leçon contient :
+
+✓ Animation courte
+✓ Explication simple
+✓ Quiz
+✓ Exercice interactif
+✓ Récompense XP
+
+⸻
+
+🆓 EXPÉRIENCE GRATUITE AVANT PAYWALL
+
+Contrairement à un modèle avec 34 leçons gratuites, ici on fait un hard paywall rapide.
+
+L’utilisateur découvre :
+
+🌱 Monde 1 : Les bases des marchés
+
+Les 5 premières leçons sont gratuites.
+
+Objectif :
+
+* Montrer la qualité
+* Créer l’habitude
+* Faire comprendre la valeur
+
+⸻
+
+Les 5 premières leçons gratuites
+
+Leçon 1
+
+Pourquoi les prix montent et descendent ?
+
+Animation :
+
+Plus d’acheteurs → 📈
+Plus de vendeurs → 📉
+
+Quiz interactif.
+
+⸻
+
+Leçon 2
+
+Qu’est-ce qu’un marché financier ?
+
+Découverte :
+
+* Actions
+* Crypto
+* Forex
+* Indices
+
+⸻
+
+Leçon 3
+
+Trading vs investissement
+
+Comprendre la différence.
+
+⸻
+
+Leçon 4
+
+Lire son premier graphique
+
+Découverte :
+
+* Prix
+* Temps
+* Bougies
+
+⸻
+
+Leçon 5
+
+Premier exercice graphique
+
+L’utilisateur identifie :
+
+* Hausse
+* Baisse
+* Zone importante
+
+⸻
+
+🔒 HARD PAYWALL IMMÉDIAT
+
+Après la 5e leçon :
+
+Animation :
+
+🎉 Tu viens de débloquer les bases
+
+Puis :
+
+Ton parcours complet est prêt.
+
+Tu vas apprendre :
+
+🔒 Chandeliers japonais
+
+🔒 Supports & résistances
+
+🔒 Figures chartistes
+
+🔒 Indicateurs techniques
+
+🔒 Price Action
+
+🔒 Smart Money Concept
+
+🔒 Order Blocks
+
+🔒 Création de stratégies
+
+🔒 Simulateur professionnel
+
+🔒 Coach IA
+
+⸻
+
+Débloque TradeQuest Premium
+
+Accès complet :
+
+✓ 500+ leçons interactives
+✓ Exercices graphiques
+✓ Simulateur de trading
+✓ Strategy Builder
+✓ Coach IA personnalisé
+✓ Journal intelligent
+✓ Parcours investissement long terme
+
+Bouton :
+
+Continuer mon apprentissage
+
+⸻
+
+📚 PARCOURS COMPLET PREMIUM
+
+🌱 NIVEAU 1 — Comprendre les marchés
+
+50 leçons
+
+* Pourquoi les prix bougent
+* Offre/demande
+* Crypto
+* Actions
+* Forex
+* Indices
+* Matières premières
+* Broker
+* Exchange
+* Wallet crypto
+* Liquidité
+* Volatilité
+* Spread
+* Frais
+* Levier
+* Marge
+
+⸻
+
+🕯️ NIVEAU 2 — Maîtriser les graphiques
+
+50 leçons
+
+* Chandeliers japonais
+* Open
+* Close
+* High
+* Low
+* Corps
+* Mèches
+* Timeframes
+* Tendances
+* Cycles
+
+Figures :
+
+* Doji
+* Hammer
+* Shooting Star
+* Engulfing
+* Pin Bar
+* Inside Bar
+* Morning Star
+
+Exercices :
+
+Identifier la psychologie derrière chaque bougie.
+
+⸻
+
+📐 NIVEAU 3 — Analyse technique
+
+100 leçons
+
+Supports / résistances
+
+* Zones
+* Réactions
+* Cassures
+* Retests
+
+Structure
+
+* Higher High
+* Higher Low
+* Lower High
+* Lower Low
+* BOS
+* CHoCH
+
+⸻
+
+📊 NIVEAU 4 — Figures chartistes
+
+100 exercices interactifs.
+
+Retournement
+
+* Double Top
+* Double Bottom
+* Triple Top
+* Triple Bottom
+* Head & Shoulders
+* Inverse Head & Shoulders
+* Wedge
+
+Continuation
+
+* Flag
+* Pennant
+* Triangle
+* Rectangle
+* Cup & Handle
+
+L’utilisateur doit :
+
+* Identifier
+* Tracer
+* Trouver la cassure
+* Définir l’objectif
+* Définir l’invalidation
+
+⸻
+
+💧 NIVEAU 5 — Smart Money Concept
+
+Liquidité
+
+* Equal High
+* Equal Low
+* Liquidity Pool
+* Sweep
+* Stop Hunt
+
+Order Blocks
+
+Apprendre :
+
+* Définition
+* Identification
+* Bullish Order Block
+* Bearish Order Block
+* Validation
+* Entrée
+* Stop Loss
+* Objectif
+
+Exercice :
+
+Le graphique apparaît.
+
+L’utilisateur place :
+
+🟦 Order Block
+
+⬆ Entrée
+
+🛑 Stop Loss
+
+🎯 Take Profit
+
+L’application analyse :
+
+* Zone choisie
+* Risque
+* Ratio risque/rendement
+
+⸻
+
+⚙️ NIVEAU 6 — Indicateurs techniques
+
+Parcours complet :
+
+Moyennes mobiles
+
+* SMA
+* EMA
+
+Momentum
+
+* RSI
+* MACD
+* Stochastic
+
+Volatilité
+
+* ATR
+* Bollinger Bands
+
+Volume
+
+* VWAP
+* Volume Profile
+
+Chaque indicateur :
+
+* Explication
+* Utilité
+* Limites
+* Exercices
+
+⸻
+
+🧪 LABORATOIRE — Strategy Builder
+
+Fonction premium majeure.
+
+L’utilisateur crée sa stratégie.
+
+Marché
+
+* Crypto
+* Forex
+* Actions
+* Indices
+
+Style
+
+* Scalping
+* Day Trading
+* Swing Trading
+
+Construction
+
+Contexte
+
+☑ Tendance
+☑ Range
+☑ Support/Résistance
+☑ Structure
+
+Entrée
+
+☑ Order Block
+☑ FVG
+☑ RSI
+☑ EMA
+☑ Pattern
+
+Sortie
+
+* Stop Loss
+* Take Profit
+* Gestion du risque
+
+⸻
+
+L’application génère :
+
+Fiche stratégie
+
+Nom :
+
+BTC Scalping Strategy
+
+Conditions :
+
+* Marché
+* Timeframe
+* Entrée
+* Sortie
+* Risque
+
+⸻
+
+🎮 SIMULATEUR PROFESSIONNEL
+
+Capital virtuel :
+
+10 000€
+
+L’utilisateur reçoit un graphique sans connaître la suite.
+
+Il analyse :
+
+* Tendance
+* Zones
+* Liquidité
+* Patterns
+
+Puis :
+
+Choix :
+
+Acheter
+
+Vendre
+
+Attendre
+
+Placement :
+
+* Entrée
+* Stop Loss
+* Take Profit
+
+Puis :
+
+▶ Avancer le marché
+
+Résultat :
+
+Analyse :
+
+“Bonne lecture de structure.”
+
+ou
+
+“Tu as ignoré une zone importante.”
+
+⸻
+
+🤖 COACH IA
+
+Analyse :
+
+Apprentissage
+
+“Tu fais beaucoup d’erreurs sur les figures chartistes.”
+
+Simulation
+
+“Tu entres trop tôt après les cassures.”
+
+Discipline
+
+“Ton risque augmente après plusieurs pertes.”
+
+⸻
+
+📒 JOURNAL DE TRADING
+
+Chaque simulation/trade :
+
+* Capture graphique
+* Marché
+* Stratégie
+* Entrée
+* Sortie
+* Résultat
+* Émotion
+
+Statistiques :
+
+* Progression
+* Erreurs fréquentes
+* Ratio moyen
+* Historique
+
+⸻
+
+🏦 INVESTISSEMENT LONG TERME
+
+Parcours :
+
+* Actions
+* ETF
+* Diversification
+* DCA
+* Intérêts composés
+* Analyse fondamentale
+* Valorisation
+* Gestion portefeuille
+
+Simulateur :
+
+Créer un portefeuille virtuel.
+
+⸻
+
+💳 MONÉTISATION
+
+Free
+
+* 5 premières leçons
+* Découverte de l’interface
+* Quelques exercices
+
+Starter
+
+Parcours complet débutant.
+
+Pro
+
+Trading complet :
+
+* Analyse technique
+* Indicateurs
+* Figures
+* Stratégies
+
+Master
+
+Tout :
+
+* Coach IA
+* Strategy Builder
+* Simulateur avancé
+* Journal intelligent
+* Backtesting
+
+⸻
+
+🛠️ MVP TECHNIQUE VERSION 3
+
+Frontend
+
+* Application mobile
+* Parcours gamifié
+* Graphiques interactifs
+* Animations
+* Profil utilisateur
+
+Backend
+
+* Comptes
+* Progression
+* XP
+* Abonnements
+* Base de cours
+* Données utilisateurs
+
+IA
+
+* Coach personnalisé
+* Analyse erreurs
+* Recommandations
+
+Trading Engine
+
+* Graphiques historiques
+* Simulation
+* Calcul risque/rendement
+* Backtesting
