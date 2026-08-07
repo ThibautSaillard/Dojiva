@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "wouter";
 import { ArrowRight, ChevronLeft, ChevronRight, Star, TrendingUp, ShieldCheck, Zap } from "lucide-react";
+import { PhoneShowcase } from "../components/PhoneShowcase";
 import avatarYanis from "@assets/IMG_9202_1786143915237.jpeg";
 import avatarLucas from "@assets/IMG_9204_1786143915237.jpeg";
 import avatarMehdi from "@assets/IMG_9206_1786143915237.jpeg";
@@ -90,6 +91,8 @@ export default function Home() {
           Créer mon compte
           <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
         </Link>
+
+        <PhoneShowcase />
 
         <TestimonialsSection
           testimonial={testimonial}
