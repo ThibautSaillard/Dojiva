@@ -1,0 +1,1328 @@
+Tu dois refondre complètement l’expérience de cette application.
+
+IMPORTANT :
+Ne fais pas une simple modification cosmétique de l’interface actuelle.
+Je veux une vraie refonte UX/UI et produit.
+
+L’objectif est de créer une application d’apprentissage du trading qui donne immédiatement l’impression d’un produit premium, moderne, addictif et extrêmement bien pensé.
+
+INSPIRATIONS PRODUIT :
+- Duolingo pour la progression, les niveaux, les récompenses et les micro-leçons
+- TradingView pour la qualité des graphiques et des outils d’analyse
+- Duolingo Max / apps éducatives premium pour la sensation de qualité
+- Jeux mobiles premium pour la gamification
+- Design fintech moderne pour la crédibilité
+
+NE COPIE PAS EXACTEMENT Duolingo.
+Je veux reprendre les principes UX de progression, mais créer une identité visuelle propre à cette application.
+
+==================================================
+1. POSITIONNEMENT
+==================================================
+
+L'application doit être perçue comme :
+
+"Une école interactive du trading."
+
+Une personne qui ne connaît ABSOLUMENT RIEN au trading doit pouvoir commencer.
+
+Une personne intermédiaire doit pouvoir aller beaucoup plus loin.
+
+Une personne avancée doit pouvoir :
+- construire ses stratégies
+- les tester
+- faire du backtesting
+- s'entraîner sur des graphiques historiques
+- analyser ses erreurs
+- suivre sa progression
+
+L'application doit donner cette sensation :
+
+"Je pensais ne rien comprendre au trading et maintenant je commence réellement à lire un graphique."
+
+Puis :
+
+"Je comprends les bougies."
+
+Puis :
+
+"Je comprends la structure."
+
+Puis :
+
+"Je sais identifier une zone."
+
+Puis :
+
+"Je sais construire une analyse."
+
+Puis :
+
+"Je peux créer ma propre stratégie."
+
+Puis :
+
+"Je peux la tester."
+
+IMPORTANT :
+Ne jamais promettre que l'utilisateur va gagner de l'argent.
+L'application est un outil d'apprentissage et de simulation.
+
+==================================================
+2. DESIGN GLOBAL
+==================================================
+
+La version actuelle est trop enfantine et trop proche d'une application éducative générique.
+
+Je veux une direction :
+
+PREMIUM + JEUNE + ÉNERGIQUE + TRADING + ÉDUCATION.
+
+Éviter :
+- énorme texte vert partout
+- design trop enfantin
+- mascotte géante au milieu de chaque écran
+- trop de texte
+- gros espaces vides
+- illustrations génériques
+- apparence "site scolaire"
+
+Je veux :
+- interface très propre
+- beaucoup plus de profondeur visuelle
+- cartes modernes
+- graphiques réels/interactifs
+- micro-animations
+- transitions
+- progression très visible
+- beaux états de réussite
+- feedback immédiat
+- hiérarchie typographique forte
+- responsive mobile-first
+- sensation d'une vraie application premium
+
+Palette :
+- fond clair légèrement cassé OU dark mode premium
+- utiliser une couleur principale forte pour l'identité
+- vert uniquement pour les gains / validations
+- rouge uniquement pour les pertes / erreurs
+- bleu/violet possible pour les éléments pédagogiques
+- ne pas utiliser le vert Duolingo comme couleur principale partout
+
+La couleur doit être cohérente avec les marchés financiers.
+
+==================================================
+3. TON DES TEXTES
+==================================================
+
+Les textes actuels sont trop institutionnels :
+
+"Une méthode scientifique"
+"On utilise des méthodes d'enseignement..."
+
+SUPPRIME CE GENRE DE COPY.
+
+Je veux un ton :
+
+- amical
+- motivant
+- jeune
+- confiant
+- simple
+- direct
+- légèrement fun
+- jamais corporate
+- jamais scolaire
+- jamais prétentieux
+
+Exemples :
+
+Au lieu de :
+"Une méthode scientifique"
+
+Utiliser :
+
+"Apprends le trading sans te prendre la tête."
+
+ou :
+
+"Tu pars de zéro ? Parfait."
+
+ou :
+
+"On va te faire passer de “c’est quoi cette bougie ?” à “je sais exactement ce que je regarde”."
+
+Au lieu de :
+"Développe tes compétences en analyse technique."
+
+Utiliser :
+
+"Apprends à lire un graphique pour de vrai."
+
+Au lieu de :
+"Une méthode d'apprentissage ludique"
+
+Utiliser :
+
+"Des petites leçons. Des vrais graphiques. Et surtout : tu pratiques."
+
+Le copywriting doit donner envie de continuer.
+
+==================================================
+4. ONBOARDING
+==================================================
+
+L'utilisateur peut être totalement débutant.
+
+NE JAMAIS supposer qu'il connaît :
+- RSI
+- support
+- résistance
+- bougie
+- leverage
+- order block
+- liquidity
+- etc.
+
+Premier écran :
+
+"Tu pars de zéro ?"
+
+Sous-titre :
+
+"Aucun problème. On commence vraiment au début."
+
+CTA :
+
+"Commencer"
+
+--------------------------------------------------
+
+Écran suivant :
+
+"Pourquoi tu veux apprendre les marchés ?"
+
+Options :
+
+"Comprendre comment ça marche"
+"Apprendre à trader"
+"Apprendre à investir"
+"Apprendre à lire les graphiques"
+"Je veux tout comprendre"
+
+--------------------------------------------------
+
+"Tu connais déjà le trading ?"
+
+"Je pars de zéro"
+"Je connais quelques bases"
+"Je trade déjà"
+
+--------------------------------------------------
+
+"Quels marchés t'intéressent ?"
+
+Crypto
+Actions
+Forex
+Indices
+Matières premières
+Tous
+
+Chaque choix doit avoir une petite explication accessible.
+
+--------------------------------------------------
+
+"Quel style t'attire le plus ?"
+
+Scalping
+Day Trading
+Swing Trading
+Investissement long terme
+"Je ne sais pas encore"
+
+IMPORTANT :
+Si l'utilisateur sélectionne "Je ne sais pas encore", ne le force pas à choisir.
+
+--------------------------------------------------
+
+À la fin :
+
+"Ok. On sait où commencer."
+
+Puis :
+
+"Ton parcours est prêt."
+
+Animation de création du parcours.
+
+==================================================
+5. HARD PAYWALL RAPIDE
+==================================================
+
+IMPORTANT :
+L'application N'EST PAS GRATUITE.
+
+Je veux un hard paywall qui arrive rapidement.
+
+L'utilisateur doit pouvoir découvrir le produit suffisamment pour comprendre sa valeur, MAIS ne doit pas pouvoir parcourir gratuitement des dizaines de leçons.
+
+Faire environ 3 à 5 micro-leçons gratuites maximum.
+
+Après ces premières expériences :
+
+PAYWALL PREMIUM.
+
+Écran :
+
+"Tu viens juste de commencer."
+
+"Et tu as déjà appris à lire les premières bases d'un graphique."
+
+Puis montrer ce qui arrive ensuite :
+
+🔒 Chandeliers japonais
+🔒 Supports & résistances
+🔒 Structure du marché
+🔒 Figures chartistes
+🔒 Indicateurs
+🔒 Price Action
+🔒 Liquidité
+🔒 Order Blocks
+🔒 FVG
+🔒 Risk Management
+🔒 Psychologie
+🔒 Création de stratégies
+🔒 Backtesting
+🔒 Simulateur
+🔒 Coach IA
+
+Headline possible :
+
+"Tu veux vraiment apprendre à lire les marchés ?"
+
+CTA principal :
+
+"Débloquer mon parcours"
+
+Ne pas utiliser :
+"Essai gratuit"
+si aucun essai gratuit n'est proposé.
+
+Le paywall doit être extrêmement premium.
+
+Ajouter les abonnements :
+- Starter
+- Pro
+- Master
+
+Avec une comparaison claire.
+
+==================================================
+6. ACADÉMIE
+==================================================
+
+Créer un véritable parcours façon jeu.
+
+Accueil :
+
+"Ton parcours"
+
+Afficher :
+
+Niveau actuel
+XP
+progression
+streak
+prochaine leçon
+
+Exemple :
+
+LEVEL 01
+LES BASES
+
+● Pourquoi les prix bougent
+● Acheteurs vs vendeurs
+● Qu'est-ce qu'un marché ?
+● Trading vs investissement
+● Lire son premier graphique
+
+Puis :
+
+LEVEL 02
+LES BOUGIES
+
+● Anatomie d'une bougie
+● Open / Close
+● High / Low
+● Corps
+● Mèche
+● Bougie haussière
+● Bougie baissière
+
+Puis :
+
+LEVEL 03
+LIRE LE MARCHÉ
+
+● Tendances
+● Range
+● Support
+● Résistance
+● Cassure
+● Retest
+
+etc.
+
+Chaque niveau doit avoir :
+- une identité
+- une progression
+- une barre de progression
+- des récompenses
+- des exercices
+
+==================================================
+7. BOUGIES JAPONAIS — TRÈS IMPORTANT
+==================================================
+
+Je veux beaucoup plus de profondeur ici.
+
+Créer un vrai module interactif.
+
+Commencer par :
+
+"Une bougie raconte ce qui s'est passé pendant une période."
+
+Afficher une vraie bougie interactive.
+
+L'utilisateur peut toucher :
+- Open
+- Close
+- High
+- Low
+- Corps
+- Mèche haute
+- Mèche basse
+
+Puis exercices :
+
+"Montre-moi le prix d'ouverture."
+
+"Cette bougie est-elle haussière ou baissière ?"
+
+"Quelle est sa clôture ?"
+
+"Que racontent les mèches ?"
+
+Puis introduire progressivement :
+
+Doji
+Hammer
+Inverted Hammer
+Shooting Star
+Hanging Man
+Bullish Engulfing
+Bearish Engulfing
+Morning Star
+Evening Star
+Inside Bar
+Pin Bar
+
+IMPORTANT :
+Ne pas simplement faire mémoriser les noms.
+
+Faire comprendre :
+- psychologie
+- contexte
+- confirmation
+- limites
+- erreurs fréquentes
+
+Exemple :
+
+"Un Hammer n'est pas automatiquement un signal d'achat."
+
+Puis montrer plusieurs graphiques.
+
+Question :
+
+"Lequel présente le meilleur contexte ?"
+
+==================================================
+8. SUPPORTS & RÉSISTANCES
+==================================================
+
+Créer des exercices graphiques.
+
+Afficher un vrai graphique.
+
+Question :
+
+"Tu vois cette zone ? Support ou résistance ?"
+
+L'utilisateur doit tracer directement sur le graphique.
+
+Puis :
+
+"Cette zone est-elle correctement placée ?"
+
+Introduire :
+- zones
+- niveaux
+- réactions
+- cassures
+- faux breakouts
+- retests
+- changement de rôle
+
+==================================================
+9. STRUCTURE DU MARCHÉ
+==================================================
+
+Créer un module complet :
+
+Higher High
+Higher Low
+Lower High
+Lower Low
+
+Puis :
+
+Uptrend
+Downtrend
+Range
+
+Puis :
+
+BOS
+CHoCH
+
+Avec des exercices de tracé.
+
+L'utilisateur doit identifier la structure directement sur le graphique.
+
+==================================================
+10. FIGURES CHARTISTES
+==================================================
+
+Créer énormément d'exercices interactifs.
+
+Retournements :
+
+Double Top
+Double Bottom
+Triple Top
+Triple Bottom
+Head & Shoulders
+Inverse Head & Shoulders
+Rounding Bottom
+Rounding Top
+Rising Wedge
+Falling Wedge
+
+Continuation :
+
+Bull Flag
+Bear Flag
+Pennant
+Ascending Triangle
+Descending Triangle
+Symmetrical Triangle
+Rectangle
+Cup & Handle
+
+Pour chaque pattern :
+
+1. Identifier
+2. Comprendre
+3. Tracer
+4. Identifier la cassure
+5. Identifier l'invalidation
+6. Définir un objectif théorique
+7. Tester sur plusieurs graphiques
+
+==================================================
+11. PRICE ACTION
+==================================================
+
+Créer un niveau complet :
+
+- impulsion
+- correction
+- consolidation
+- breakout
+- retest
+- rejection
+- momentum
+- structure
+- contexte
+
+Faire énormément de cas pratiques.
+
+==================================================
+12. SMART MONEY / LIQUIDITY
+==================================================
+
+Module avancé.
+
+Inclure :
+
+Liquidity
+Equal High
+Equal Low
+Liquidity Pool
+Liquidity Sweep
+Stop Run
+Market Structure
+BOS
+CHoCH
+FVG
+Order Block
+Breaker
+Mitigation
+
+IMPORTANT :
+Présenter ces concepts comme des frameworks d'analyse, pas comme des vérités garantissant une entrée gagnante.
+
+==================================================
+13. ORDER BLOCKS
+==================================================
+
+Créer un vrai exercice graphique.
+
+Le graphique apparaît.
+
+Question :
+
+"Trouve l'Order Block."
+
+L'utilisateur dessine la zone.
+
+Puis :
+
+"Place ton entrée."
+
+"Place ton invalidation."
+
+"Place ton objectif."
+
+L'application explique ensuite pourquoi la réponse est plus ou moins cohérente.
+
+IMPORTANT :
+Ne jamais dire qu'un Order Block "va fonctionner".
+
+Utiliser :
+"zone potentielle"
+"hypothèse"
+"invalidation"
+"contexte"
+
+==================================================
+14. INDICATEURS
+==================================================
+
+Créer une grande bibliothèque interactive.
+
+Moyennes mobiles :
+SMA
+EMA
+
+Momentum :
+RSI
+MACD
+Stochastic
+
+Volatilité :
+ATR
+Bollinger Bands
+
+Volume :
+Volume
+VWAP
+Volume Profile
+
+Tendance :
+ADX
+
+Et d'autres indicateurs pertinents.
+
+Pour chaque indicateur :
+
+- À quoi ça sert ?
+- Comment ça fonctionne ?
+- Quand l'utiliser ?
+- Quand NE PAS l'utiliser ?
+- Limites
+- Erreurs fréquentes
+- Exercices
+
+Ne pas faire croire qu'un indicateur prédit le marché.
+
+==================================================
+15. RISK MANAGEMENT
+==================================================
+
+Créer un module extrêmement important.
+
+Apprendre :
+
+- capital
+- risque par trade
+- taille de position
+- Stop Loss
+- Take Profit
+- Risk/Reward
+- drawdown
+- série de pertes
+- exposition
+- levier
+- marge
+
+Créer une calculatrice interactive.
+
+Exemple :
+
+Capital :
+10 000 €
+
+Risque :
+1 %
+
+Stop :
+2 %
+
+L'app calcule la taille théorique de position.
+
+Toujours rappeler que le résultat est pédagogique et dépend du marché, des frais et de l'exécution.
+
+==================================================
+16. PSYCHOLOGIE
+==================================================
+
+Créer un vrai parcours.
+
+- FOMO
+- Revenge trading
+- Overtrading
+- peur
+- cupidité
+- impatience
+- biais de confirmation
+- discipline
+- plan de trading
+- journalisation
+
+Créer des scénarios.
+
+Exemple :
+
+"Tu viens de perdre 2 trades."
+
+"Ton prochain setup arrive."
+
+Que fais-tu ?
+
+Puis expliquer.
+
+==================================================
+17. STRATEGY BUILDER
+==================================================
+
+Créer une fonctionnalité premium extrêmement propre.
+
+Titre :
+
+"Construis ta stratégie."
+
+L'utilisateur sélectionne :
+
+Marché
+Timeframe
+Style
+
+Scalping
+Day Trading
+Swing
+
+Puis construit ses règles.
+
+CONTEXT :
+
+☑ Tendance
+☑ Range
+☑ Support
+☑ Résistance
+☑ Structure
+☑ Volatilité
+
+SETUP :
+
+☑ Breakout
+☑ Retest
+☑ Order Block
+☑ FVG
+☑ Pattern
+☑ RSI
+☑ EMA
+☑ VWAP
+
+ENTRY :
+
+Définir les conditions.
+
+INVALIDATION :
+
+Définir le Stop Loss.
+
+TARGET :
+
+Définir Take Profit.
+
+RISK :
+
+Définir le risque théorique.
+
+Puis générer une fiche :
+
+"Ma stratégie"
+
+Conditions d'entrée
+Conditions de sortie
+Invalidation
+Gestion du risque
+Marchés
+Timeframes
+
+==================================================
+18. BACKTESTING
+==================================================
+
+Créer un vrai mode backtesting pédagogique.
+
+L'utilisateur sélectionne :
+
+Marché
+Période
+Timeframe
+Stratégie
+
+Puis le graphique avance progressivement.
+
+L'utilisateur ne voit pas les bougies futures.
+
+Il prend ses décisions.
+
+À la fin :
+
+- nombre de trades
+- trades gagnants
+- trades perdants
+- win rate
+- gain/perte simulé
+- drawdown
+- moyenne R
+- erreurs
+
+IMPORTANT :
+Les performances historiques ne garantissent pas les performances futures.
+
+==================================================
+19. SIMULATEUR
+==================================================
+
+Capital virtuel :
+
+10 000 €
+
+Interface graphique premium.
+
+L'utilisateur peut :
+
+BUY
+SELL
+WAIT
+
+Puis placer :
+
+Entry
+Stop Loss
+Take Profit
+
+Avancer le marché bougie par bougie.
+
+Ajouter :
+
+pause
+play
+avance rapide
+retour à la décision
+
+À la fin du trade :
+
+"Qu'est-ce que tu as bien fait ?"
+
+"Qu'est-ce que tu aurais pu mieux faire ?"
+
+Puis analyse IA.
+
+==================================================
+20. COACH IA
+==================================================
+
+Créer un coach personnel.
+
+Il connaît :
+
+- progression
+- erreurs
+- résultats des exercices
+- stratégies
+- simulations
+- journal
+
+Exemple :
+
+"Tu progresses vite sur les chandeliers."
+
+"Par contre, tu confonds encore souvent cassure et retest."
+
+"On va te faire travailler ça."
+
+Créer un bouton :
+
+"Mon entraînement du jour"
+
+L'IA choisit automatiquement 5 exercices adaptés aux faiblesses de l'utilisateur.
+
+==================================================
+21. JOURNAL
+==================================================
+
+Créer un journal premium.
+
+Chaque trade :
+
+- marché
+- setup
+- direction
+- entrée
+- stop
+- target
+- résultat
+- capture
+- émotion
+- commentaire
+
+Dashboard :
+
+Win rate
+R moyen
+Drawdown
+Nombre de trades
+Stratégies
+Erreurs fréquentes
+
+Créer une analyse IA :
+
+"Voici tes 3 erreurs les plus fréquentes."
+
+==================================================
+22. INVESTISSEMENT LONG TERME
+==================================================
+
+Créer une branche complète.
+
+Apprendre :
+
+Actions
+ETF
+DCA
+Diversification
+Allocation
+Risque
+Volatilité
+Intérêts composés
+Analyse fondamentale
+Chiffre d'affaires
+Marge
+Bénéfice
+Cash-flow
+Valorisation
+P/E
+P/S
+Dette
+ROE
+Croissance
+
+Puis :
+
+Portfolio Simulator
+
+Capital virtuel.
+
+==================================================
+23. CRYPTO
+==================================================
+
+Créer un module crypto complet.
+
+Apprendre :
+
+Bitcoin
+Ethereum
+Altcoins
+Blockchain
+Wallet
+Exchange
+Spot
+Futures
+Volatilité
+Liquidité
+Funding
+Market Cap
+Tokenomics
+Cycles
+
+IMPORTANT :
+Les futures, le levier et les produits dérivés doivent être présentés avec des avertissements de risque très clairs.
+
+==================================================
+24. GAMIFICATION
+==================================================
+
+Créer :
+
+XP
+Niveaux
+Streak
+Badges
+Challenges
+Progression
+Daily Goal
+
+Exemples de badges :
+
+"Première analyse"
+
+"100 bougies analysées"
+
+"Ma première stratégie"
+
+"7 jours consécutifs"
+
+"100 exercices réussis"
+
+Créer une sensation de progression permanente.
+
+==================================================
+25. NAVIGATION PRINCIPALE
+==================================================
+
+Bottom navigation mobile :
+
+ACCUEIL
+ACADÉMIE
+LAB
+SIMULATEUR
+PROFIL
+
+Le Coach IA peut être accessible depuis plusieurs endroits.
+
+==================================================
+26. PAYWALL / ABONNEMENTS
+==================================================
+
+Pas de produit gratuit complet.
+
+Le gratuit sert uniquement à découvrir l'expérience.
+
+Après quelques premières interactions :
+
+HARD PAYWALL.
+
+Plans :
+
+STARTER
+
+Pour apprendre les fondamentaux.
+
+PRO
+
+Pour apprendre et pratiquer le trading.
+
+MASTER
+
+Pour accéder à l'expérience complète.
+
+Master inclut :
+- Académie complète
+- Exercices graphiques
+- Strategy Builder
+- Backtesting
+- Simulateur avancé
+- Coach IA
+- Journal intelligent
+- Parcours investissement
+- Parcours crypto
+
+Créer un écran de comparaison magnifique.
+
+Le CTA doit être clair.
+
+==================================================
+27. MICROCOPY
+==================================================
+
+Utiliser des phrases vivantes.
+
+Exemples :
+
+"Bien joué."
+
+"Tu l'avais vue celle-là ?"
+
+"Pas grave. Regarde pourquoi."
+
+"Exactement."
+
+"Encore une et c'est validé."
+
+"Tu commences à vraiment lire le graphique."
+
+"Ça, c'est une vraie progression."
+
+"Ok… là tu commences à parler comme un trader."
+
+"Petit rappel : un setup n'est jamais garanti."
+
+"Regarde le contexte avant de cliquer."
+
+"Ne devine pas. Analyse."
+
+"Prends ton temps."
+
+"Ton cerveau commence à repérer les patterns."
+
+"On augmente le niveau."
+
+Mais éviter les emojis partout.
+Ils doivent être rares et utilisés uniquement quand ils améliorent l'expérience.
+
+==================================================
+28. IMPORTANT : QUALITÉ DES LEÇONS
+==================================================
+
+Je ne veux PAS de faux contenu ou de simples paragraphes.
+
+Chaque concept doit être transformé en expérience.
+
+Exemple :
+
+Concept :
+Support
+
+Mauvais :
+"Un support est une zone où le prix peut rebondir."
+
+Bon :
+
+1. Montrer le graphique.
+2. Faire observer plusieurs réactions.
+3. Demander à l'utilisateur de tracer la zone.
+4. Lui faire choisir entre plusieurs zones.
+5. Montrer une fausse cassure.
+6. Montrer le retest.
+7. Lui faire prendre une décision.
+8. Expliquer la réponse.
+9. Répéter avec un autre graphique.
+
+L'objectif est :
+
+COMPRENDRE → PRATIQUER → SE TROMPER → COMPRENDRE → RÉESSAYER → MAÎTRISER.
+
+==================================================
+29. ARCHITECTURE TECHNIQUE
+==================================================
+
+Ne pas créer une simple maquette.
+
+Créer une architecture réellement fonctionnelle.
+
+Frontend :
+- React / Next.js ou stack déjà présente
+- mobile-first
+- composants réutilisables
+- animations fluides
+
+Backend :
+- authentification
+- profils
+- progression
+- XP
+- streak
+- abonnement
+- données de cours
+- résultats exercices
+- journal
+
+Trading engine :
+- données historiques
+- moteur de simulation
+- calcul des positions
+- SL / TP
+- P&L simulé
+- drawdown
+- statistiques
+- backtesting
+
+Charts :
+Utiliser une vraie librairie de graphiques adaptée au trading.
+Prévoir :
+- chandeliers
+- zoom
+- déplacement
+- timeframe
+- dessin de lignes
+- zones
+- support/résistance
+- annotations
+- Order Blocks
+- FVG
+- niveaux Entry/SL/TP
+
+IA :
+Créer une couche permettant :
+- analyse de progression
+- génération d'exercices
+- coach personnalisé
+- analyse du journal
+- explication des erreurs
+
+Paiement :
+Préparer l'intégration Stripe pour les abonnements.
+
+==================================================
+30. RESPONSIVE
+==================================================
+
+L'expérience doit être pensée d'abord pour téléphone.
+
+Sur mobile :
+- graphiques utilisables au doigt
+- boutons suffisamment gros
+- bottom navigation
+- gestes simples
+- aucune interface minuscule
+- aucune page surchargée
+
+Desktop :
+profiter de l'espace supplémentaire pour afficher davantage le graphique.
+
+==================================================
+31. DONNER UNE VRAIE IMPRESSION DE PROGRESSION
+==================================================
+
+C'est extrêmement important.
+
+Quand quelqu'un revient après 7 jours, il doit voir :
+
+"Tu étais ici."
+
+"Tu sais maintenant faire ça."
+
+"Prochaine étape : structure du marché."
+
+Afficher une timeline de compétences :
+
+BASES
+↓
+BOUGIES
+↓
+GRAPHIQUES
+↓
+STRUCTURE
+↓
+PRICE ACTION
+↓
+FIGURES
+↓
+INDICATEURS
+↓
+LIQUIDITÉ
+↓
+ORDER BLOCKS
+↓
+RISK MANAGEMENT
+↓
+PSYCHOLOGIE
+↓
+STRATÉGIES
+↓
+BACKTEST
+↓
+SIMULATION
+
+Le sentiment recherché :
+
+"Putain, j'ai vraiment appris énormément de choses."
+
+==================================================
+32. REFONTE DES ÉCRANS ACTUELS
+==================================================
+
+Les captures d'écran fournies dans ce projet servent uniquement de référence pour comprendre l'état actuel.
+
+NE PAS conserver :
+- énorme mascotte centrée
+- énormes titres verts
+- longues phrases institutionnelles
+- espaces blancs excessifs
+- esthétique enfantine
+
+Remplacer par des écrans plus riches et plus premium.
+
+La mascotte peut éventuellement devenir un petit personnage/coach secondaire, mais elle ne doit jamais dominer l'écran.
+
+==================================================
+33. RÈGLE ABSOLUE
+==================================================
+
+NE PAS créer 200 écrans statiques sans logique.
+
+Créer d'abord une architecture solide avec :
+- composants
+- données
+- progression
+- leçons
+- exercices
+- graphiques
+- états
+- paywall
+- compte utilisateur
+
+Les premiers contenus doivent réellement fonctionner.
+
+Je veux pouvoir :
+1. créer un compte
+2. faire l'onboarding
+3. voir mon parcours
+4. faire les premières leçons
+5. faire des exercices sur des graphiques
+6. gagner de l'XP
+7. voir ma progression
+8. arriver au hard paywall
+9. choisir un abonnement
+10. accéder ensuite aux modules premium
+11. créer une stratégie
+12. lancer une simulation
+13. enregistrer un trade
+14. consulter mon journal
+15. voir mon analyse IA
+
+Priorité absolue :
+UX exceptionnelle + design premium + apprentissage réellement interactif + graphiques + progression.
+
+Ne remplis pas l'application avec du texte générique.
+Chaque écran doit avoir une raison d'exister.
+
+Le produit final doit donner l'impression d'une vraie startup fintech/edtech prête à être montrée à des utilisateurs, pas d'un prototype généré automatiquement.
