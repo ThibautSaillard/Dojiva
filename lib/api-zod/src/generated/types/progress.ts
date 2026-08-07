@@ -21,6 +21,11 @@ export interface Progress {
   /** @nullable */
   style?: string | null;
   premium: boolean;
+  /**
+     * Subscription plan (starter, pro, master) or null when free
+     * @nullable
+     */
+  plan?: string | null;
   /** Virtual simulator capital in EUR */
   balance: number;
 }

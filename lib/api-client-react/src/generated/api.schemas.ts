@@ -103,6 +103,11 @@ export interface Progress {
   /** @nullable */
   style?: string | null;
   premium: boolean;
+  /**
+     * Subscription plan (starter, pro, master) or null when free
+     * @nullable
+     */
+  plan?: string | null;
   /** Virtual simulator capital in EUR */
   balance: number;
 }
@@ -292,4 +297,17 @@ export interface Testimonial {
   rating: number;
   text: string;
 }
+
+export type ActivatePremiumBodyPlan = typeof ActivatePremiumBodyPlan[keyof typeof ActivatePremiumBodyPlan];
+
+
+export const ActivatePremiumBodyPlan = {
+  starter: 'starter',
+  pro: 'pro',
+  master: 'master',
+} as const;
+
+export type ActivatePremiumBody = {
+  plan?: ActivatePremiumBodyPlan;
+};
 

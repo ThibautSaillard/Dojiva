@@ -92,6 +92,7 @@ export const CompleteLessonResponse = zod.object({
   "markets": zod.array(zod.string()).optional(),
   "style": zod.string().nullish(),
   "premium": zod.boolean(),
+  "plan": zod.string().nullish().describe('Subscription plan (starter, pro, master) or null when free'),
   "balance": zod.number().describe('Virtual simulator capital in EUR')
 })
 
@@ -111,6 +112,7 @@ export const GetProgressResponse = zod.object({
   "markets": zod.array(zod.string()).optional(),
   "style": zod.string().nullish(),
   "premium": zod.boolean(),
+  "plan": zod.string().nullish().describe('Subscription plan (starter, pro, master) or null when free'),
   "balance": zod.number().describe('Virtual simulator capital in EUR')
 })
 
@@ -137,13 +139,18 @@ export const SaveOnboardingResponse = zod.object({
   "markets": zod.array(zod.string()).optional(),
   "style": zod.string().nullish(),
   "premium": zod.boolean(),
+  "plan": zod.string().nullish().describe('Subscription plan (starter, pro, master) or null when free'),
   "balance": zod.number().describe('Virtual simulator capital in EUR')
 })
 
 
 /**
- * @summary Activate the free premium trial and unlock all content
+ * @summary Activate a premium plan and unlock content
  */
+export const ActivatePremiumBody = zod.object({
+  "plan": zod.enum(['starter', 'pro', 'master']).optional()
+})
+
 export const ActivatePremiumResponse = zod.object({
   "xp": zod.int(),
   "level": zod.int(),
@@ -156,6 +163,7 @@ export const ActivatePremiumResponse = zod.object({
   "markets": zod.array(zod.string()).optional(),
   "style": zod.string().nullish(),
   "premium": zod.boolean(),
+  "plan": zod.string().nullish().describe('Subscription plan (starter, pro, master) or null when free'),
   "balance": zod.number().describe('Virtual simulator capital in EUR')
 })
 

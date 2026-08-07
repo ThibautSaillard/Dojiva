@@ -12,6 +12,7 @@ import Coach from '@/pages/coach';
 import Journal from '@/pages/journal';
 import Profile from '@/pages/profile';
 import { Route, Switch, Router as WouterRouter } from 'wouter';
+import { Layout } from '@/components/Layout';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -24,18 +25,20 @@ const queryClient = new QueryClient({
 
 function Router() {
   return (
-    <Switch>
-      <Route path="/" component={Home} />
-      <Route path="/apprendre" component={Onboarding} />
-      <Route path="/academie" component={Academy} />
-      <Route path="/lecon/:id" component={Lesson} />
-      <Route path="/simulateur" component={Simulator} />
-      <Route path="/laboratoire" component={Laboratory} />
-      <Route path="/coach" component={Coach} />
-      <Route path="/journal" component={Journal} />
-      <Route path="/profil" component={Profile} />
-      <Route component={NotFound} />
-    </Switch>
+    <Layout>
+      <Switch>
+        <Route path="/" component={Home} />
+        <Route path="/apprendre" component={Onboarding} />
+        <Route path="/academie" component={Academy} />
+        <Route path="/lecon/:id" component={Lesson} />
+        <Route path="/simulateur" component={Simulator} />
+        <Route path="/laboratoire" component={Laboratory} />
+        <Route path="/coach" component={Coach} />
+        <Route path="/journal" component={Journal} />
+        <Route path="/profil" component={Profile} />
+        <Route component={NotFound} />
+      </Switch>
+    </Layout>
   );
 }
 

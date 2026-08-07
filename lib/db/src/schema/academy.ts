@@ -49,6 +49,7 @@ export const lessonStepsTable = pgTable("lesson_steps", {
 export const playerProgressTable = pgTable("player_progress", {
   id: serial("id").primaryKey(),
   premium: boolean("premium").notNull().default(false),
+  plan: text("plan"), // starter | pro | master | null
   balance: doublePrecision("balance").notNull().default(10000),
   xp: integer("xp").notNull().default(0),
   streak: integer("streak").notNull().default(0),

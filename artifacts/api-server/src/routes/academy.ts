@@ -22,6 +22,7 @@ import {
   SaveOnboardingBody,
   SaveOnboardingResponse,
   ActivatePremiumResponse,
+  ActivatePremiumBody,
   ListTestimonialsResponse,
 } from "@workspace/api-zod";
 
@@ -69,6 +70,7 @@ async function buildProgressPayload() {
     markets: progress.markets ?? [],
     style: progress.style,
     premium: progress.premium,
+    plan: progress.plan,
     balance: progress.balance,
   };
 }
@@ -93,11 +95,16 @@ router.get("/worlds", async (_req, res): Promise<void> => {
   res.json(ListWorldsResponse.parse(payload));
 });
 
-router.post("/premium/activate", async (_req, res): Promise<void> => {
+router.post("/premium/activate", async (req, res): Promise<void> => {
+  const body = ActivatePremiumBody.safeParse(req.body ?? {});
+  if (!body.success) {
+    res.status(400).json({ error: body.error.message });
+    return;
+  }
   const progress = await getOrCreateProgress();
   await db
     .update(playerProgressTable)
-    .set({ premium: true })
+    .set({ premium: true, plan: body.data.plan ?? "starter" })
     .where(eq(playerProgressTable.id, progress.id));
   res.json(ActivatePremiumResponse.parse(await buildProgressPayload()));
 });

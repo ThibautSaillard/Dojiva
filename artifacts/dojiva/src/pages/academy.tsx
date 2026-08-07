@@ -1,181 +1,112 @@
-import { useLocation } from "wouter";
-import { useGetProgress, useListWorlds } from "@workspace/api-client-react";
-import { CandleMascot } from "@/components/CandleMascot";
-import { Layout } from "@/components/Layout";
-import { motion } from "framer-motion";
-import { Lock, Star } from "lucide-react";
+import { Link } from "wouter";
+import { useListWorlds, useGetProgress } from "@workspace/api-client-react";
+import { Lock, Star, Play, CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export default function Academy() {
-  const { data: progress, isLoading: loadingProgress } = useGetProgress();
-  const { data: worlds, isLoading: loadingWorlds } = useListWorlds();
-  const [, setLocation] = useLocation();
+  const { data: worlds, isLoading } = useListWorlds();
+  const { data: progress } = useGetProgress();
 
-  if (loadingProgress || loadingWorlds) {
+  if (isLoading || !worlds || !progress) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-white">
-        <CandleMascot size={150} mood="happy" animate={true} />
+      <div className="flex flex-col items-center justify-center py-20">
+        <div className="w-8 h-8 rounded-full border-2 border-primary border-t-transparent animate-spin"></div>
       </div>
     );
   }
 
-  // Redirect to onboarding if not onboarded
-  if (progress && !progress.onboarded) {
-    setLocation("/apprendre");
-    return null;
-  }
+  const completedIds = new Set(progress.completedLessonIds || []);
 
   return (
-    <Layout>
-      <div className="w-full">
-        {worlds?.map((world, worldIndex) => (
-          <WorldSection 
-            key={world.id} 
-            world={world} 
-            isFirst={worldIndex === 0}
-            progress={progress}
-          />
-        ))}
+    <div className="pb-8">
+      <div className="mb-10 text-center">
+        <h1 className="text-3xl font-bold mb-2 tracking-tight">Ton parcours</h1>
+        <p className="text-muted-foreground">Continue ton apprentissage pour monter en niveau.</p>
       </div>
-    </Layout>
-  );
-}
 
+      <div className="space-y-12">
+        {worlds.map((world, wIndex) => {
+          const isWorldLocked = world.locked && !progress.premium;
+          
+          return (
+            <div key={world.id} className="relative">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-12 h-12 rounded-2xl bg-secondary flex items-center justify-center text-2xl">
+                  {world.emoji}
+                </div>
+                <div>
+                  <h2 className="text-xl font-bold uppercase tracking-wide">Niveau {String(wIndex + 1).padStart(2, '0')}</h2>
+                  <p className="text-muted-foreground">{world.title}</p>
+                </div>
+                {isWorldLocked && (
+                  <div className="ml-auto p-2 bg-secondary rounded-full">
+                    <Lock className="w-5 h-5 text-muted-foreground" />
+                  </div>
+                )}
+              </div>
 
-function WorldSection({ world, isFirst, progress }: { world: any, isFirst: boolean, progress: any }) {
-  const isLocked = world.locked;
-  
-  return (
-    <div className="mb-8">
-      {/* World Header */}
-      <div className={cn(
-        "px-4 py-6 text-white relative overflow-hidden",
-        isLocked ? "bg-gray-300" : "bg-primary"
-      )}>
-        <div className="relative z-10 flex items-center justify-between max-w-2xl mx-auto">
-          <div>
-            <div className="text-white/80 font-bold uppercase tracking-wider text-sm flex items-center gap-2 mb-1">
-              Unité {world.order} {world.emoji}
+              <div className="space-y-4 pl-6 relative">
+                {/* Connecting line */}
+                <div className="absolute left-[39px] top-8 bottom-8 w-0.5 bg-border -z-10" />
+
+                {world.lessons.map((lesson, lIndex) => {
+                  const isCompleted = completedIds.has(lesson.id);
+                  const isLocked = (!lesson.free && !progress.premium) || (isWorldLocked);
+                  const isNext = !isCompleted && !isLocked && (lIndex === 0 || completedIds.has(world.lessons[lIndex - 1].id));
+
+                  return (
+                    <Link 
+                      key={lesson.id} 
+                      href={isLocked ? "/academie" : `/lecon/${lesson.id}`}
+                      className={cn(
+                        "relative flex items-center p-4 rounded-2xl border-2 transition-all group",
+                        isCompleted ? "border-success bg-success/5" :
+                        isNext ? "border-primary bg-primary/10 shadow-lg shadow-primary/10 hover:border-primary/80" :
+                        isLocked ? "border-border bg-card/50 opacity-60 cursor-not-allowed" :
+                        "border-border bg-card hover:border-primary/50"
+                      )}
+                    >
+                      {/* Node circle on the line */}
+                      <div className={cn(
+                        "absolute -left-[26px] w-4 h-4 rounded-full border-4 border-background",
+                        isCompleted ? "bg-success" :
+                        isNext ? "bg-primary" :
+                        "bg-border"
+                      )} />
+
+                      <div className="flex-1">
+                        <div className="font-semibold text-lg">{lesson.title}</div>
+                        <div className="flex items-center gap-3 text-sm mt-1 text-muted-foreground">
+                          <span className="flex items-center gap-1"><Star className="w-3 h-3" /> {lesson.xpReward} XP</span>
+                          {lesson.free && !progress.premium && <span className="text-primary text-xs font-bold px-1.5 py-0.5 rounded bg-primary/10">GRATUIT</span>}
+                        </div>
+                      </div>
+
+                      <div className="shrink-0 ml-4">
+                        {isCompleted ? (
+                          <div className="w-10 h-10 rounded-full bg-success/20 flex items-center justify-center">
+                            <CheckCircle2 className="w-5 h-5 text-success" />
+                          </div>
+                        ) : isLocked ? (
+                          <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center">
+                            <Lock className="w-5 h-5 text-muted-foreground" />
+                          </div>
+                        ) : isNext ? (
+                          <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-primary-foreground group-hover:scale-110 transition-transform">
+                            <Play className="w-4 h-4 ml-0.5" />
+                          </div>
+                        ) : (
+                          <div className="w-10 h-10 rounded-full border-2 border-border flex items-center justify-center" />
+                        )}
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
             </div>
-            <h2 className="text-2xl font-black">{world.title}</h2>
-            <p className="font-bold text-white/90">{world.subtitle}</p>
-          </div>
-          <button className={cn(
-            "h-10 px-4 rounded-xl font-bold uppercase tracking-wider text-sm flex items-center gap-1 border-b-4",
-            isLocked ? "bg-gray-200 text-gray-400 border-gray-300" : "bg-white text-primary border-white/20"
-          )}>
-            <Star className={cn("w-4 h-4", isLocked ? "text-gray-400" : "text-primary")} /> Guide
-          </button>
-        </div>
-      </div>
-
-      {/* Path */}
-      <div className={cn("py-12 relative", isLocked ? "opacity-60 pointer-events-none grayscale" : "")}>
-        {/* Mascot decoration */}
-        {!isLocked && (
-          <div className="absolute right-4 md:right-20 top-1/3 hidden sm:block">
-            <CandleMascot size={120} mood="happy" animate={true} />
-          </div>
-        )}
-
-        <div className="flex flex-col items-center gap-4 relative">
-          {world.lessons.map((lesson: any, i: number) => {
-            const isCompleted = progress?.completedLessonIds?.includes(lesson.id);
-            const isNext = !isCompleted && (!progress?.completedLessonIds || progress?.completedLessonIds.length === lesson.id - 1);
-            const isLessonLocked = !isCompleted && !isNext && lesson.id > 1;
-
-            // Calculate x offset for sine wave pattern
-            const xOffset = Math.sin(i * 0.8) * 60;
-            
-            return (
-              <LessonBubble 
-                key={lesson.id} 
-                lesson={lesson}
-                isCompleted={isCompleted}
-                isNext={isNext}
-                isLocked={isLessonLocked || isLocked}
-                xOffset={xOffset}
-              />
-            );
-          })}
-        </div>
-        
-        {isLocked && (
-           <div className="absolute inset-0 flex items-center justify-center flex-col mt-20">
-             <div className="bg-white rounded-3xl border-2 border-gray-200 shadow-sm p-6 max-w-sm text-center">
-                <Lock className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-                <h3 className="text-xl font-black text-[#3c3c3c] mb-2">Section verrouillée</h3>
-                <p className="text-gray-500 font-medium mb-4">Termine les leçons précédentes ou abonne-toi pour débloquer cette section.</p>
-                <button className="w-full bg-gray-100 text-gray-400 font-bold py-3 rounded-xl uppercase tracking-wider text-sm border-b-4 border-gray-200">
-                  Débloquer le reste de l'aventure
-                </button>
-             </div>
-           </div>
-        )}
+          );
+        })}
       </div>
     </div>
-  );
-}
-
-function LessonBubble({ lesson, isCompleted, isNext, isLocked, xOffset }: any) {
-  const [, setLocation] = useLocation();
-  let bubbleColor = "bg-primary border-[#46a302]";
-  let iconColor = "text-white";
-  
-  if (isCompleted) {
-    bubbleColor = "bg-[#ffc800] border-[#e5b400]";
-  } else if (isLocked) {
-    bubbleColor = "bg-gray-200 border-gray-300";
-    iconColor = "text-gray-400";
-  }
-
-  const Bubble = (
-    <div 
-      className={cn(
-        "relative w-[70px] h-[70px] rounded-full flex items-center justify-center border-b-[6px]",
-        bubbleColor
-      )}
-    >
-      {isCompleted ? (
-        <Star className={cn("w-8 h-8 fill-current", iconColor)} />
-      ) : isLocked ? (
-        <Lock className={cn("w-8 h-8", iconColor)} />
-      ) : (
-        <Star className={cn("w-8 h-8", iconColor)} /> // use appropriate icon based on lesson.icon
-      )}
-
-      {/* Floating Crown/Tooltip if it's the current next lesson */}
-      {isNext && (
-        <motion.div 
-          className="absolute -top-14 bg-white border-2 border-gray-200 rounded-xl px-4 py-2 font-bold text-primary shadow-sm uppercase tracking-wider text-sm whitespace-nowrap"
-          animate={{ y: [0, -5, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
-        >
-          COMMENCER
-          <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white border-r-2 border-b-2 border-gray-200 rotate-45" />
-        </motion.div>
-      )}
-
-      {/* Pulse ring if next */}
-      {isNext && (
-         <div className="absolute inset-0 rounded-full border-4 border-primary/30 -z-10 animate-ping" />
-      )}
-    </div>
-  );
-
-  return (
-    <motion.div 
-      style={{ x: xOffset }} 
-      className={cn("relative", (isCompleted || isNext) ? "cursor-pointer" : "cursor-default")}
-      whileHover={(isCompleted || isNext) ? { scale: 1.05 } : {}}
-      whileTap={(isCompleted || isNext) ? { scale: 0.95 } : {}}
-      onClick={() => !isLocked && setLocation(`/lecon/${lesson.id}`)}
-    >
-       {isLocked ? (
-         <div className="opacity-80 pointer-events-none">{Bubble}</div>
-       ) : (
-         <div>{Bubble}</div>
-       )}
-    </motion.div>
   );
 }

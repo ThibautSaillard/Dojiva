@@ -130,7 +130,17 @@ paths:
     post:
       operationId: activatePremium
       tags: [academy]
-      summary: Activate the free premium trial and unlock all content
+      summary: Activate a premium plan and unlock content
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                plan:
+                  type: string
+                  enum: [starter, pro, master]
       responses:
         "200":
           description: Updated progress
@@ -424,6 +434,9 @@ components:
           type: ["string", "null"]
         premium:
           type: boolean
+        plan:
+          type: ["string", "null"]
+          description: Subscription plan (starter, pro, master) or null when free
         balance:
           type: number
           description: Virtual simulator capital in EUR

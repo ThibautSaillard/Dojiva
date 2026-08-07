@@ -20,6 +20,7 @@ import type {
 } from '@tanstack/react-query';
 
 import type {
+  ActivatePremiumBody,
   ApiMessage,
   Badge,
   CoachAdvice,
@@ -527,16 +528,16 @@ export const getActivatePremiumUrl = () => {
 }
 
 /**
- * @summary Activate the free premium trial and unlock all content
+ * @summary Activate a premium plan and unlock content
  */
-export const activatePremium = async ( options?: Parameters<typeof customFetch>[1]): Promise<Progress> => {
+export const activatePremium = async (activatePremiumBody?: ActivatePremiumBody, options?: Parameters<typeof customFetch>[1]): Promise<Progress> => {
 
   return customFetch<Progress>(getActivatePremiumUrl(),
   {
     ...options,
-    method: 'POST'
-
-
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(activatePremiumBody)
   }
 );}
 
@@ -545,8 +546,8 @@ export const activatePremium = async ( options?: Parameters<typeof customFetch>[
 
 
 export const getActivatePremiumMutationOptions = <TError = ErrorType<unknown>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof activatePremium>>, TError,void, TContext>, request?: SecondParameter<typeof customFetch>}
-): UseMutationOptions<Awaited<ReturnType<typeof activatePremium>>, TError,void, TContext> => {
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof activatePremium>>, TError,{data?: BodyType<ActivatePremiumBody>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof activatePremium>>, TError,{data?: BodyType<ActivatePremiumBody>}, TContext> => {
 
 const mutationKey = ['activatePremium'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
@@ -558,10 +559,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof activatePremium>>, void> = () => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof activatePremium>>, {data?: BodyType<ActivatePremiumBody>}> = (props) => {
+          const {data} = props ?? {};
 
-
-          return  activatePremium(requestOptions)
+          return  activatePremium(data,requestOptions)
         }
 
 
@@ -572,18 +573,18 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
   return  { mutationFn, ...mutationOptions }}
 
     export type ActivatePremiumMutationResult = NonNullable<Awaited<ReturnType<typeof activatePremium>>>
-
+    export type ActivatePremiumMutationBody = BodyType<ActivatePremiumBody> | undefined
     export type ActivatePremiumMutationError = ErrorType<unknown>
 
     /**
- * @summary Activate the free premium trial and unlock all content
+ * @summary Activate a premium plan and unlock content
  */
 export const useActivatePremium = <TError = ErrorType<unknown>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof activatePremium>>, TError,void, TContext>, request?: SecondParameter<typeof customFetch>}
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof activatePremium>>, TError,{data?: BodyType<ActivatePremiumBody>}, TContext>, request?: SecondParameter<typeof customFetch>}
  ): UseMutationResult<
         Awaited<ReturnType<typeof activatePremium>>,
         TError,
-        void,
+        {data?: BodyType<ActivatePremiumBody>},
         TContext
       > => {
       return useMutation(getActivatePremiumMutationOptions(options));

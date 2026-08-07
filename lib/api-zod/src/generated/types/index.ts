@@ -6,6 +6,8 @@
  * OpenAPI spec version: 0.1.0
  */
 
+export * from './activatePremiumBody';
+export * from './activatePremiumBodyPlan';
 export * from './apiMessage';
 export * from './badge';
 export * from './candle';

@@ -1,50 +1,83 @@
-import { Layout } from "@/components/Layout";
 import { useGetProgress, useListBadges } from "@workspace/api-client-react";
-import { Zap, Flame, ShieldCheck } from "lucide-react";
-import { CandleMascot } from "@/components/CandleMascot";
+import { User, Flame, Zap, Trophy } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export default function Profile() {
-  const { data: progress } = useGetProgress();
-  const { data: badges } = useListBadges();
+  const { data: progress, isLoading: progressLoading } = useGetProgress();
+  const { data: badges, isLoading: badgesLoading } = useListBadges();
+
+  if (progressLoading || badgesLoading || !progress || !badges) {
+    return (
+      <div className="flex justify-center py-20">
+        <div className="w-8 h-8 rounded-full border-2 border-primary border-t-transparent animate-spin"></div>
+      </div>
+    );
+  }
 
   return (
-    <Layout>
-      <div className="flex flex-col items-center bg-[#1cb0f6]/10 border-2 border-[#1cb0f6]/20 rounded-3xl p-8 mb-8 relative overflow-hidden">
-        <div className="absolute -right-10 -bottom-10 opacity-20"><CandleMascot size={200} mood="happy" /></div>
-        
-        <div className="w-24 h-24 bg-white rounded-full border-4 border-[#1cb0f6] flex items-center justify-center text-4xl font-black text-[#1cb0f6] shadow-sm mb-4 relative z-10">
-          N{progress?.level || 1}
-        </div>
-        <h1 className="text-3xl font-black text-[#3c3c3c] mb-6 relative z-10">Ton Profil</h1>
-        
-        <div className="grid grid-cols-2 gap-4 w-full relative z-10">
-          <div className="bg-white rounded-2xl p-4 border-2 border-gray-200 flex flex-col items-center">
-            <Zap className="w-8 h-8 text-[#ffc800] mb-2" />
-            <div className="text-2xl font-black text-[#3c3c3c]">{progress?.xp || 0}</div>
-            <div className="text-xs font-bold text-gray-400 uppercase">XP Total</div>
+    <div className="flex flex-col gap-8 pb-8">
+      {/* Header Profile */}
+      <div className="flex flex-col items-center text-center p-6 bg-card border border-border rounded-3xl">
+        <div className="w-24 h-24 rounded-full bg-secondary flex items-center justify-center mb-4 relative">
+          <User className="w-10 h-10 text-muted-foreground" />
+          <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-primary rounded-full border-4 border-card flex items-center justify-center text-primary-foreground font-bold text-xs">
+            {progress.level}
           </div>
-          <div className="bg-white rounded-2xl p-4 border-2 border-gray-200 flex flex-col items-center">
-            <Flame className="w-8 h-8 text-orange-500 mb-2" />
-            <div className="text-2xl font-black text-[#3c3c3c]">{progress?.streak || 0}</div>
-            <div className="text-xs font-bold text-gray-400 uppercase">Série (Jours)</div>
+        </div>
+        <h1 className="text-2xl font-bold mb-1">Trader Débutant</h1>
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-primary/10 text-primary text-sm font-semibold rounded-full mt-2">
+          {progress.premium ? "Membre Premium" : "Plan Gratuit"}
+        </div>
+      </div>
+
+      {/* Stats row */}
+      <div className="grid grid-cols-2 gap-4">
+        <div className="p-4 rounded-2xl bg-card border border-border flex items-center gap-4">
+          <div className="w-12 h-12 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-500">
+            <Flame className="w-6 h-6" />
+          </div>
+          <div>
+            <div className="text-2xl font-black">{progress.streak}</div>
+            <div className="text-xs text-muted-foreground font-medium uppercase tracking-wider">Jours de suite</div>
+          </div>
+        </div>
+        <div className="p-4 rounded-2xl bg-card border border-border flex items-center gap-4">
+          <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+            <Zap className="w-6 h-6" />
+          </div>
+          <div>
+            <div className="text-2xl font-black">{progress.xp}</div>
+            <div className="text-xs text-muted-foreground font-medium uppercase tracking-wider">Total XP</div>
           </div>
         </div>
       </div>
 
+      {/* Badges */}
       <div>
-        <h2 className="text-2xl font-black text-[#3c3c3c] mb-6 flex items-center gap-2">
-          <ShieldCheck className="text-[#58cc02]" /> Tes Badges
-        </h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-          {badges?.map(b => (
-            <div key={b.id} className={`border-2 rounded-3xl p-4 flex flex-col items-center text-center transition-all ${b.earned ? 'bg-white border-[#e5e5e5] shadow-sm' : 'bg-gray-50 border-gray-200 opacity-60 grayscale'}`}>
-              <div className="text-4xl mb-3">{b.emoji}</div>
-              <div className="font-black text-[#3c3c3c] mb-1 leading-tight">{b.title}</div>
-              <div className="text-xs font-bold text-gray-400">{b.description}</div>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-bold flex items-center gap-2">
+            <Trophy className="w-5 h-5 text-primary" /> Tes Badges
+          </h2>
+          <span className="text-sm font-medium text-muted-foreground">
+            {badges.filter(b => b.earned).length} / {badges.length}
+          </span>
+        </div>
+        <div className="grid grid-cols-3 sm:grid-cols-4 gap-4">
+          {badges.map((badge) => (
+            <div 
+              key={badge.id}
+              className={cn(
+                "flex flex-col items-center text-center p-3 rounded-2xl border transition-all",
+                badge.earned ? "border-primary bg-primary/5 opacity-100" : "border-border bg-secondary opacity-50 grayscale"
+              )}
+            >
+              <div className="text-3xl mb-2">{badge.emoji}</div>
+              <div className="text-[10px] font-bold uppercase leading-tight line-clamp-2">{badge.title}</div>
             </div>
           ))}
         </div>
       </div>
-    </Layout>
+
+    </div>
   );
 }
