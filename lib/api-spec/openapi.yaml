@@ -130,7 +130,7 @@ paths:
     post:
       operationId: activatePremium
       tags: [academy]
-      summary: Activate a premium plan and unlock content
+      summary: Activate a premium plan after confirmed payment
       requestBody:
         required: false
         content:
@@ -148,6 +148,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Progress"
+        "402":
+          description: Payment required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiMessage"
   /badges:
     get:
       operationId: listBadges

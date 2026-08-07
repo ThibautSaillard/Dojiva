@@ -21,8 +21,6 @@ import {
   GetProgressResponse,
   SaveOnboardingBody,
   SaveOnboardingResponse,
-  ActivatePremiumResponse,
-  ActivatePremiumBody,
   ListTestimonialsResponse,
 } from "@workspace/api-zod";
 
@@ -95,18 +93,10 @@ router.get("/worlds", async (_req, res): Promise<void> => {
   res.json(ListWorldsResponse.parse(payload));
 });
 
-router.post("/premium/activate", async (req, res): Promise<void> => {
-  const body = ActivatePremiumBody.safeParse(req.body ?? {});
-  if (!body.success) {
-    res.status(400).json({ error: body.error.message });
-    return;
-  }
-  const progress = await getOrCreateProgress();
-  await db
-    .update(playerProgressTable)
-    .set({ premium: true, plan: body.data.plan ?? "starter" })
-    .where(eq(playerProgressTable.id, progress.id));
-  res.json(ActivatePremiumResponse.parse(await buildProgressPayload()));
+router.post("/premium/activate", async (_req, res): Promise<void> => {
+  res.status(402).json({
+    error: "Paiement requis. Le premium est activé après confirmation du paiement.",
+  });
 });
 
 router.get("/lessons/:id", async (req, res): Promise<void> => {
@@ -121,6 +111,11 @@ router.get("/lessons/:id", async (req, res): Promise<void> => {
     .where(eq(lessonsTable.id, params.data.id));
   if (!lesson) {
     res.status(404).json({ error: "Leçon introuvable" });
+    return;
+  }
+  const progress = await getOrCreateProgress();
+  if (!lesson.free && !progress.premium) {
+    res.status(402).json({ error: "Cette leçon nécessite un accès premium." });
     return;
   }
   const steps = await db
@@ -166,6 +161,10 @@ router.post("/lessons/:id/complete", async (req, res): Promise<void> => {
   }
 
   const progress = await getOrCreateProgress();
+  if (!lesson.free && !progress.premium) {
+    res.status(402).json({ error: "Cette leçon nécessite un accès premium." });
+    return;
+  }
   const [already] = await db
     .select()
     .from(completedLessonsTable)

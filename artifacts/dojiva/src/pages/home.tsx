@@ -16,7 +16,7 @@ export default function Home() {
           </div>
           Dojiva
         </div>
-        <Link href="/apprendre" className="text-sm font-semibold bg-secondary px-4 py-2 rounded-lg hover:bg-secondary/80 transition-colors">
+        <Link href="/sign-in" className="text-sm font-semibold bg-secondary px-4 py-2 rounded-lg hover:bg-secondary/80 transition-colors">
           Connexion
         </Link>
       </header>
@@ -37,8 +37,8 @@ export default function Home() {
           Tu pars de zéro ? Parfait. On va te faire passer de "c'est quoi cette bougie ?" à "je sais exactement ce que je regarde". Des petites leçons. Des vrais graphiques. Et surtout : tu pratiques.
         </p>
 
-        <Link href="/apprendre" className="group flex items-center gap-2 bg-primary text-primary-foreground px-8 py-4 rounded-xl text-lg font-bold hover:bg-primary/90 transition-all shadow-xl shadow-primary/25 hover:scale-105">
-          Commencer maintenant
+        <Link href="/sign-up" className="group flex items-center gap-2 bg-primary text-primary-foreground px-8 py-4 rounded-xl text-lg font-bold hover:bg-primary/90 transition-all shadow-xl shadow-primary/25 hover:scale-105">
+          Créer mon compte
           <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
         </Link>
 

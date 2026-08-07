@@ -1,3 +1,4 @@
-// Only the zod schemas are exported: the plain TS types in ./generated/types
-// duplicate zod schema names (e.g. ActivatePremiumBody) and nothing imports them.
+// The generated zod schemas and generated TS types can share names
+// (for example ActivatePremiumBody). Export schemas here; consumers that need
+// generated plain types can import them from ./generated/types directly.
 export * from "./generated/api";

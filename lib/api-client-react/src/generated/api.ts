@@ -528,7 +528,7 @@ export const getActivatePremiumUrl = () => {
 }
 
 /**
- * @summary Activate a premium plan and unlock content
+ * @summary Activate a premium plan after confirmed payment
  */
 export const activatePremium = async (activatePremiumBody?: ActivatePremiumBody, options?: Parameters<typeof customFetch>[1]): Promise<Progress> => {
 
@@ -545,7 +545,7 @@ export const activatePremium = async (activatePremiumBody?: ActivatePremiumBody,
 
 
 
-export const getActivatePremiumMutationOptions = <TError = ErrorType<unknown>,
+export const getActivatePremiumMutationOptions = <TError = ErrorType<ApiMessage>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof activatePremium>>, TError,{data?: BodyType<ActivatePremiumBody>}, TContext>, request?: SecondParameter<typeof customFetch>}
 ): UseMutationOptions<Awaited<ReturnType<typeof activatePremium>>, TError,{data?: BodyType<ActivatePremiumBody>}, TContext> => {
 
@@ -574,12 +574,12 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
     export type ActivatePremiumMutationResult = NonNullable<Awaited<ReturnType<typeof activatePremium>>>
     export type ActivatePremiumMutationBody = BodyType<ActivatePremiumBody> | undefined
-    export type ActivatePremiumMutationError = ErrorType<unknown>
+    export type ActivatePremiumMutationError = ErrorType<ApiMessage>
 
     /**
- * @summary Activate a premium plan and unlock content
+ * @summary Activate a premium plan after confirmed payment
  */
-export const useActivatePremium = <TError = ErrorType<unknown>,
+export const useActivatePremium = <TError = ErrorType<ApiMessage>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof activatePremium>>, TError,{data?: BodyType<ActivatePremiumBody>}, TContext>, request?: SecondParameter<typeof customFetch>}
  ): UseMutationResult<
         Awaited<ReturnType<typeof activatePremium>>,

@@ -8,7 +8,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
   const { data: progress, isLoading } = useGetProgress();
   const [location, setLocation] = useLocation();
 
-  const isPublicPage = location === "/" || location === "/apprendre";
+  const isPublicPage =
+    location === "/" ||
+    location === "/apprendre" ||
+    location === "/inscription" ||
+    location.startsWith("/sign-in") ||
+    location.startsWith("/sign-up") ||
+    location.startsWith("/paiement");
 
   useEffect(() => {
     if (progress && !progress.onboarded && !isPublicPage) {

@@ -26,6 +26,7 @@ export default function Lesson() {
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [feedback, setFeedback] = useState<"correct" | "wrong" | null>(null);
   const [score, setScore] = useState(0);
+  const [showPaywall, setShowPaywall] = useState(false);
   
   const lessonId = parseInt(id || "0", 10);
   const { data: lesson, isLoading } = useGetLesson(lessonId, { query: { enabled: !!lessonId, queryKey: getGetLessonQueryKey(lessonId) } });
@@ -34,10 +35,15 @@ export default function Lesson() {
 
   const completeLesson = useCompleteLesson({
     mutation: {
-      onSuccess: () => {
+      onSuccess: (updatedProgress) => {
         queryClient.invalidateQueries({ queryKey: getGetProgressQueryKey() });
         queryClient.invalidateQueries({ queryKey: getListWorldsQueryKey() });
-        setTimeout(() => setLocation("/academie"), 1500);
+        const freeLessonsCompleted = updatedProgress.completedLessonIds.filter((completedId) => completedId <= 5).length;
+        if (!updatedProgress.premium && freeLessonsCompleted >= 5) {
+          setTimeout(() => setShowPaywall(true), 900);
+        } else {
+          setTimeout(() => setLocation("/academie"), 1500);
+        }
       }
     }
   });
@@ -93,7 +99,7 @@ export default function Lesson() {
     }
   };
 
-  if (completeLesson.isPending || completeLesson.isSuccess) {
+  if (completeLesson.isPending || (completeLesson.isSuccess && !showPaywall)) {
     return (
       <div className="min-h-[100dvh] flex flex-col items-center justify-center p-6 text-center animate-in fade-in zoom-in duration-500">
         <div className="w-24 h-24 bg-success/20 rounded-full flex items-center justify-center mb-6">
@@ -202,6 +208,7 @@ export default function Lesson() {
           </button>
         </div>
       </div>
+      {showPaywall && <PremiumGate />}
     </div>
   );
 }

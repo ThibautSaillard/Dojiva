@@ -145,7 +145,7 @@ export const SaveOnboardingResponse = zod.object({
 
 
 /**
- * @summary Activate a premium plan and unlock content
+ * @summary Activate a premium plan after confirmed payment
  */
 export const ActivatePremiumBody = zod.object({
   "plan": zod.enum(['starter', 'pro', 'master']).optional()
