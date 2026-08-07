@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "wouter";
-import { ArrowRight, ChevronLeft, ChevronRight, Star, TrendingUp, ShieldCheck, Zap } from "lucide-react";
+import { ArrowRight, ChevronDown, ChevronLeft, ChevronRight, Star, TrendingUp, ShieldCheck, Zap } from "lucide-react";
 import { PhoneShowcase } from "../components/PhoneShowcase";
 import { motion, useReducedMotion } from "framer-motion";
 import avatarYanis from "@assets/IMG_9202_1786143915237.jpeg";
@@ -49,8 +49,36 @@ const testimonials = [
   },
 ];
 
+const faqs = [
+  {
+    question: "Est-ce que Dojiva est adapté si je pars de zéro ?",
+    answer: "Oui. Le parcours commence par les bases : comprendre une bougie, lire une tendance et observer un graphique. Chaque notion est découpée en petites leçons avant de passer à la pratique.",
+  },
+  {
+    question: "Est-ce que je risque de perdre mon argent ?",
+    answer: "Non, les exercices et le simulateur utilisent de l’argent virtuel. Dojiva est une plateforme d’apprentissage. Le trading réel comporte des risques importants et Dojiva ne fournit pas de conseil en investissement.",
+  },
+  {
+    question: "Que contient l’accès premium ?",
+    answer: "L’accès premium débloque la suite du parcours, les exercices avancés, le simulateur avec 10 000 € virtuels, le journal de trading et, selon la formule choisie, le laboratoire de stratégies et le Coach IA.",
+  },
+  {
+    question: "Puis-je annuler mon abonnement ?",
+    answer: "Oui. Tu peux annuler le renouvellement de ton abonnement. L’accès reste disponible jusqu’à la fin de la période déjà payée, sauf disposition différente prévue par la loi.",
+  },
+  {
+    question: "Puis-je être remboursé après avoir commencé le parcours ?",
+    answer: "Tu peux demander un remboursement tant que tu n’as pas commencé la première leçon de la deuxième partie. Dès que tu ouvres ou commences cette leçon, la commande n’est plus éligible au remboursement selon notre politique, sous réserve de tes droits légaux.",
+  },
+  {
+    question: "Dojiva garantit-il des résultats en trading ?",
+    answer: "Non. Dojiva t’aide à apprendre et à pratiquer dans un environnement virtuel, mais aucun résultat financier n’est garanti. Les performances passées et les résultats du simulateur ne préjugent pas des résultats futurs.",
+  },
+];
+
 export default function Home() {
   const [activeTestimonial, setActiveTestimonial] = useState(0);
+  const [activeFaq, setActiveFaq] = useState<number | null>(0);
   const testimonial = testimonials[activeTestimonial];
 
   return (
@@ -106,6 +134,11 @@ export default function Home() {
         />
 
         <StackedFeatures />
+
+        <FAQSection
+          activeFaq={activeFaq}
+          onToggle={(index) => setActiveFaq((current) => current === index ? null : index)}
+        />
       </main>
     </div>
   );
@@ -277,6 +310,70 @@ function TestimonialsSection({
           />
         ))}
       </div>
+    </section>
+  );
+}
+
+function FAQSection({
+  activeFaq,
+  onToggle,
+}: {
+  activeFaq: number | null;
+  onToggle: (index: number) => void;
+}) {
+  return (
+    <section className="mt-24 w-full max-w-3xl text-left sm:mt-32" aria-labelledby="faq-title">
+      <div className="mb-8 text-center">
+        <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.22em] text-primary">Questions fréquentes</p>
+        <h2 id="faq-title" className="text-3xl font-extrabold tracking-tight sm:text-5xl">
+          Tu veux en savoir <span className="text-primary">plus ?</span>
+        </h2>
+        <p className="mx-auto mt-4 max-w-xl text-sm leading-6 text-muted-foreground sm:text-base">
+          Les réponses essentielles avant de commencer ton parcours Dojiva.
+        </p>
+      </div>
+
+      <div className="overflow-hidden rounded-2xl border border-border bg-card/70">
+        {faqs.map((faq, index) => {
+          const isOpen = activeFaq === index;
+          const contentId = `faq-answer-${index}`;
+
+          return (
+            <div key={faq.question} className="border-b border-border last:border-b-0">
+              <button
+                type="button"
+                aria-expanded={isOpen}
+                aria-controls={contentId}
+                onClick={() => onToggle(index)}
+                className="flex w-full items-center justify-between gap-5 px-5 py-5 text-left transition hover:bg-primary/5 sm:px-6"
+              >
+                <span className="text-sm font-bold leading-6 text-foreground sm:text-base">{faq.question}</span>
+                <ChevronDown className={`h-5 w-5 shrink-0 text-primary transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`} />
+              </button>
+              <div
+                id={contentId}
+                role="region"
+                aria-hidden={!isOpen}
+                className={`grid transition-[grid-template-rows,opacity] duration-300 ${
+                  isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+                }`}
+              >
+                <div className="min-h-0 overflow-hidden">
+                  <p className="px-5 pb-5 text-sm leading-6 text-muted-foreground sm:px-6">{faq.answer}</p>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <p className="mt-6 text-center text-xs leading-5 text-muted-foreground">
+        Tu veux lire toutes les conditions ?{" "}
+        <Link href="/legal" className="font-bold text-primary hover:text-primary/80">
+          Consulte nos pages légales
+        </Link>
+        .
+      </p>
     </section>
   );
 }
