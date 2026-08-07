@@ -71,6 +71,7 @@ export const earnedBadgesTable = pgTable("earned_badges", {
   id: serial("id").primaryKey(),
   badgeId: integer("badge_id")
     .notNull()
+    .unique()
     .references(() => badgesTable.id),
   earnedAt: timestamp("earned_at", { withTimezone: true })
     .notNull()

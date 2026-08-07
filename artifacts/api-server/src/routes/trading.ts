@@ -1,5 +1,6 @@
 import { Router, type IRouter } from "express";
-import { asc, desc, eq } from "drizzle-orm";
+import type { Request, Response, NextFunction } from "express";
+import { asc, desc, eq, and, sql } from "drizzle-orm";
 import {
   db,
   playerProgressTable,
@@ -75,14 +76,57 @@ async function awardBadge(code: string) {
     .from(badgesTable)
     .where(eq(badgesTable.code, code));
   if (!badge) return;
-  const earned = await db
-    .select()
-    .from(earnedBadgesTable)
-    .where(eq(earnedBadgesTable.badgeId, badge.id));
-  if (earned.length === 0) {
-    await db.insert(earnedBadgesTable).values({ badgeId: badge.id });
-  }
+  await db
+    .insert(earnedBadgesTable)
+    .values({ badgeId: badge.id })
+    .onConflictDoNothing();
 }
+
+// Idempotent badge catalog seed — guarantees badge definitions exist in any environment.
+const BADGE_SEED = [
+  { code: "first-lesson", title: "Premier pas", description: "Termine ta première leçon", emoji: "🎓" },
+  { code: "world-1", title: "Fondations solides", description: "Termine le monde « Les bases des marchés »", emoji: "🌱" },
+  { code: "streak-3", title: "En feu", description: "Atteins une série de 3 jours", emoji: "🔥" },
+  { code: "first-trade", title: "Premier trade", description: "Passe ton premier trade dans le simulateur", emoji: "🎮" },
+  { code: "first-win", title: "Objectif atteint", description: "Gagne ton premier trade (Take Profit touché)", emoji: "🎯" },
+  { code: "good-rr", title: "Maître du ratio", description: "Gagne un trade avec un ratio risque/rendement ≥ 2", emoji: "⚖️" },
+  { code: "ten-trades", title: "Trader assidu", description: "Passe 10 trades dans le simulateur", emoji: "📈" },
+  { code: "first-strategy", title: "Stratège", description: "Crée ta première stratégie dans le Laboratoire", emoji: "🧪" },
+];
+let badgesSeeded = false;
+async function ensureBadges() {
+  if (badgesSeeded) return;
+  await db.insert(badgesTable).values(BADGE_SEED).onConflictDoNothing();
+  badgesSeeded = true;
+}
+
+// Server-side premium gate: all game features require the (free) premium activation.
+async function requirePremium(
+  _req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  const progress = await getProgress();
+  if (!progress.premium) {
+    res.status(403).json({
+      error:
+        "Section Premium : active ton accès depuis l'application pour débloquer cette fonctionnalité.",
+    });
+    return;
+  }
+  next();
+}
+
+function isFinitePositive(n: number | null | undefined): n is number {
+  return typeof n === "number" && Number.isFinite(n) && n > 0;
+}
+
+router.use(
+  ["/simulator", "/journal", "/strategies", "/coach"],
+  (req, res, next) => {
+    requirePremium(req, res, next).catch(next);
+  },
+);
 
 router.post("/simulator/scenario", async (_req, res): Promise<void> => {
   const market = MARKETS[Math.floor(Math.random() * MARKETS.length)]!;
@@ -117,12 +161,32 @@ router.post("/simulator/trades", async (req, res): Promise<void> => {
     res.status(400).json({ error: body.error.message });
     return;
   }
+  if (
+    body.data.riskPercent != null &&
+    (!Number.isFinite(body.data.riskPercent) ||
+      body.data.riskPercent < 0.1 ||
+      body.data.riskPercent > 5)
+  ) {
+    res
+      .status(400)
+      .json({ error: "Le risque par trade doit être entre 0,1% et 5% du capital." });
+    return;
+  }
+  // Claim the scenario atomically: resolves exactly once even under replay/concurrency.
   const [scenario] = await db
-    .select()
-    .from(simScenariosTable)
-    .where(eq(simScenariosTable.id, body.data.scenarioId));
+    .update(simScenariosTable)
+    .set({ used: true })
+    .where(
+      and(
+        eq(simScenariosTable.id, body.data.scenarioId),
+        eq(simScenariosTable.used, false),
+      ),
+    )
+    .returning();
   if (!scenario) {
-    res.status(404).json({ error: "Scénario introuvable" });
+    res
+      .status(409)
+      .json({ error: "Scénario introuvable ou déjà joué. Lance un nouveau scénario." });
     return;
   }
   const all: Candle[] = JSON.parse(scenario.candles);
@@ -156,6 +220,26 @@ router.post("/simulator/trades", async (req, res): Promise<void> => {
         .status(400)
         .json({ error: "Stop Loss et Take Profit sont obligatoires" });
       return;
+    }
+    if (
+      !isFinitePositive(entry) ||
+      !isFinitePositive(sl) ||
+      !isFinitePositive(tp)
+    ) {
+      res
+        .status(400)
+        .json({ error: "Entrée, Stop Loss et Take Profit doivent être des prix positifs." });
+      return;
+    }
+    if (body.data.strategyId != null) {
+      const [strat] = await db
+        .select({ id: strategiesTable.id })
+        .from(strategiesTable)
+        .where(eq(strategiesTable.id, body.data.strategyId));
+      if (!strat) {
+        res.status(400).json({ error: "Stratégie liée introuvable." });
+        return;
+      }
     }
     const isBuy = direction === "buy";
     if ((isBuy && (sl >= entry || tp <= entry)) || (!isBuy && (sl <= entry || tp >= entry))) {
@@ -233,15 +317,15 @@ router.post("/simulator/trades", async (req, res): Promise<void> => {
     else feedback.push("⏳ Le marché n'a touché ni ton objectif ni ton stop.");
   }
 
-  const newBalance = Number((progress.balance + pnl).toFixed(2));
-  await db
+  // Atomic increment: no lost updates under concurrent trades.
+  const [updated] = await db
     .update(playerProgressTable)
-    .set({ balance: newBalance })
-    .where(eq(playerProgressTable.id, progress.id));
-  await db
-    .update(simScenariosTable)
-    .set({ used: true })
-    .where(eq(simScenariosTable.id, scenario.id));
+    .set({
+      balance: sql`round((${playerProgressTable.balance} + ${pnl})::numeric, 2)::double precision`,
+    })
+    .where(eq(playerProgressTable.id, progress.id))
+    .returning({ balance: playerProgressTable.balance });
+  const newBalance = updated?.balance ?? progress.balance + pnl;
   await db.insert(simTradesTable).values({
     scenarioId: scenario.id,
     strategyId: body.data.strategyId ?? null,
@@ -341,6 +425,35 @@ router.post("/strategies", async (req, res): Promise<void> => {
     res.status(400).json({ error: body.error.message });
     return;
   }
+  const texts = [
+    body.data.name,
+    body.data.market,
+    body.data.style,
+    body.data.timeframe,
+    body.data.stopLossRule ?? "",
+    body.data.takeProfitRule ?? "",
+    ...body.data.context,
+    ...body.data.entryRules,
+  ];
+  if (
+    body.data.name.trim().length === 0 ||
+    texts.some((t) => t.length > 200) ||
+    body.data.context.length > 20 ||
+    body.data.entryRules.length > 20
+  ) {
+    res.status(400).json({ error: "Champs de stratégie invalides ou trop longs." });
+    return;
+  }
+  if (
+    !Number.isFinite(body.data.riskPercent) ||
+    body.data.riskPercent < 0.1 ||
+    body.data.riskPercent > 5
+  ) {
+    res
+      .status(400)
+      .json({ error: "Le risque par trade doit être entre 0,1% et 5% du capital." });
+    return;
+  }
   const [created] = await db
     .insert(strategiesTable)
     .values({
@@ -381,7 +494,19 @@ router.delete("/strategies/:id", async (req, res): Promise<void> => {
   res.json(DeleteStrategyResponse.parse({ ok: true }));
 });
 
+// Simple cooldown so the AI coach can't be spammed.
+let lastCoachCallAt = 0;
+const COACH_COOLDOWN_MS = 15_000;
+
 router.post("/coach", async (req, res): Promise<void> => {
+  const now = Date.now();
+  if (now - lastCoachCallAt < COACH_COOLDOWN_MS) {
+    res.status(429).json({
+      error: "Le coach vient juste de te répondre. Réessaie dans quelques secondes.",
+    });
+    return;
+  }
+  lastCoachCallAt = now;
   const progress = await getProgress();
   const completed = await db
     .select({
@@ -479,6 +604,7 @@ Chaque "title" fait 3-6 mots, chaque "message" fait 2-3 phrases maximum. Ne prom
 });
 
 router.get("/badges", async (_req, res): Promise<void> => {
+  await ensureBadges();
   const badges = await db.select().from(badgesTable).orderBy(asc(badgesTable.id));
   const earned = await db.select().from(earnedBadgesTable);
   const earnedMap = new Map(earned.map((e) => [e.badgeId, e.earnedAt]));
