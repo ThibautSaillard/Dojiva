@@ -20,4 +20,7 @@ export interface Progress {
   markets?: string[];
   /** @nullable */
   style?: string | null;
+  premium: boolean;
+  /** Virtual simulator capital in EUR */
+  balance: number;
 }

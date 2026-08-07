@@ -5,6 +5,7 @@ import {
   integer,
   boolean,
   timestamp,
+  doublePrecision,
 } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod/v4";
@@ -47,6 +48,8 @@ export const lessonStepsTable = pgTable("lesson_steps", {
 
 export const playerProgressTable = pgTable("player_progress", {
   id: serial("id").primaryKey(),
+  premium: boolean("premium").notNull().default(false),
+  balance: doublePrecision("balance").notNull().default(10000),
   xp: integer("xp").notNull().default(0),
   streak: integer("streak").notNull().default(0),
   hearts: integer("hearts").notNull().default(5),

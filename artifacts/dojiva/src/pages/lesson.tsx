@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import { useLocation, useParams } from "wouter";
 import { useQueryClient } from "@tanstack/react-query";
-import { useGetLesson, useCompleteLesson, getGetProgressQueryKey, getListWorldsQueryKey } from "@workspace/api-client-react";
+import { useGetLesson, useCompleteLesson, useActivatePremium, getGetProgressQueryKey, getListWorldsQueryKey } from "@workspace/api-client-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChunkyButton } from "@/components/ChunkyButton";
 import { CandleMascot } from "@/components/CandleMascot";
@@ -376,18 +376,29 @@ function CelebrationScreen({ xp, score, total, onContinue }: { xp: number, score
 }
 
 function PaywallScreen({ onContinue }: { onContinue: () => void }) {
+  const queryClient = useQueryClient();
+  const activatePremium = useActivatePremium({
+    mutation: {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: getGetProgressQueryKey() });
+        queryClient.invalidateQueries({ queryKey: getListWorldsQueryKey() });
+        onContinue();
+      }
+    }
+  });
+
   return (
-    <div className="min-h-[100dvh] bg-gray-900 text-white flex flex-col items-center py-12 px-4">
+    <div className="min-h-[100dvh] bg-gray-900 text-white flex flex-col items-center justify-center py-12 px-4">
       <motion.div 
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         className="max-w-md w-full flex flex-col items-center text-center"
       >
-        <div className="w-24 h-24 bg-gradient-to-tr from-yellow-400 to-yellow-600 rounded-3xl rotate-12 flex items-center justify-center mb-8 shadow-xl shadow-yellow-500/20">
+        <div className="w-24 h-24 bg-gradient-to-tr from-[#ffc800] to-[#e5b400] rounded-3xl rotate-12 flex items-center justify-center mb-8 shadow-xl shadow-[#ffc800]/20">
            <CandleMascot size={60} mood="happy" animate={false} />
         </div>
         
-        <h2 className="text-3xl font-black mb-4">🎉 Tu viens de débloquer les bases</h2>
+        <h2 className="text-3xl font-black mb-4">Tu viens de débloquer les bases</h2>
         <p className="text-gray-400 text-lg mb-8 font-medium">Ton parcours complet est prêt.</p>
         
         <div className="w-full bg-gray-800 rounded-3xl p-6 border border-gray-700 mb-8 text-left">
@@ -410,8 +421,14 @@ function PaywallScreen({ onContinue }: { onContinue: () => void }) {
           </ul>
         </div>
 
-        <ChunkyButton size="xl" className="w-full" variant="gold" onClick={onContinue}>
-          Continuer mon apprentissage
+        <ChunkyButton 
+          size="xl" 
+          className="w-full" 
+          variant="gold" 
+          onClick={() => activatePremium.mutate()}
+          disabled={activatePremium.isPending}
+        >
+          {activatePremium.isPending ? "ACTIVATION..." : "Continuer mon apprentissage"}
         </ChunkyButton>
       </motion.div>
     </div>

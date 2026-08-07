@@ -12,6 +12,8 @@ tags:
     description: Health operations
   - name: academy
     description: Lessons, worlds and gamified progression
+  - name: trading
+    description: Simulator, strategies, journal, coach and badges
 paths:
   /healthz:
     get:
@@ -124,6 +126,147 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Progress"
+  /premium/activate:
+    post:
+      operationId: activatePremium
+      tags: [academy]
+      summary: Activate the free premium trial and unlock all content
+      responses:
+        "200":
+          description: Updated progress
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Progress"
+  /badges:
+    get:
+      operationId: listBadges
+      tags: [trading]
+      summary: List badges with earned status
+      responses:
+        "200":
+          description: Badges
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Badge"
+  /simulator/scenario:
+    post:
+      operationId: createScenario
+      tags: [trading]
+      summary: Generate a new simulator scenario (visible candles only)
+      responses:
+        "200":
+          description: New scenario
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Scenario"
+  /simulator/trades:
+    post:
+      operationId: submitTrade
+      tags: [trading]
+      summary: Submit a trade decision and advance the market
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TradeInput"
+      responses:
+        "200":
+          description: Trade result with revealed candles and feedback
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TradeResult"
+        "404":
+          description: Scenario not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiMessage"
+  /journal:
+    get:
+      operationId: getJournal
+      tags: [trading]
+      summary: Trading journal with statistics
+      responses:
+        "200":
+          description: Journal entries and stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Journal"
+  /strategies:
+    get:
+      operationId: listStrategies
+      tags: [trading]
+      summary: List saved strategies
+      responses:
+        "200":
+          description: Strategies
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Strategy"
+    post:
+      operationId: createStrategy
+      tags: [trading]
+      summary: Create a strategy from the builder
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StrategyInput"
+      responses:
+        "200":
+          description: Created strategy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Strategy"
+  /strategies/{id}:
+    delete:
+      operationId: deleteStrategy
+      tags: [trading]
+      summary: Delete a strategy
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkMessage"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiMessage"
+  /coach:
+    post:
+      operationId: getCoachAdvice
+      tags: [trading]
+      summary: Generate personalized AI coach advice from learning and trading history
+      responses:
+        "200":
+          description: Coach advice
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CoachAdvice"
   /testimonials:
     get:
       operationId: listTestimonials
@@ -252,7 +395,8 @@ components:
           type: integer
     Progress:
       type: object
-      required: [xp, level, streak, hearts, completedLessonIds, onboarded]
+      required:
+        [xp, level, streak, hearts, completedLessonIds, onboarded, premium, balance]
       properties:
         xp:
           type: integer
@@ -278,6 +422,11 @@ components:
             type: string
         style:
           type: ["string", "null"]
+        premium:
+          type: boolean
+        balance:
+          type: number
+          description: Virtual simulator capital in EUR
     OnboardingInput:
       type: object
       required: [goal, experienceLevel, markets, style]
@@ -291,6 +440,237 @@ components:
           items:
             type: string
         style:
+          type: string
+    OkMessage:
+      type: object
+      required: [ok]
+      properties:
+        ok:
+          type: boolean
+    Badge:
+      type: object
+      required: [id, code, title, description, emoji, earned]
+      properties:
+        id:
+          type: integer
+        code:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        emoji:
+          type: string
+        earned:
+          type: boolean
+        earnedAt:
+          type: ["string", "null"]
+    Candle:
+      type: object
+      required: [o, h, l, c]
+      properties:
+        o:
+          type: number
+        h:
+          type: number
+        l:
+          type: number
+        c:
+          type: number
+    Scenario:
+      type: object
+      required: [id, market, timeframe, candles, balance]
+      properties:
+        id:
+          type: integer
+        market:
+          type: string
+        timeframe:
+          type: string
+        candles:
+          type: array
+          description: Visible candles only (the future stays hidden)
+          items:
+            $ref: "#/components/schemas/Candle"
+        balance:
+          type: number
+    TradeInput:
+      type: object
+      required: [scenarioId, direction]
+      properties:
+        scenarioId:
+          type: integer
+        direction:
+          type: string
+          enum: [buy, sell, wait]
+        entry:
+          type: ["number", "null"]
+        stopLoss:
+          type: ["number", "null"]
+        takeProfit:
+          type: ["number", "null"]
+        riskPercent:
+          type: ["number", "null"]
+          description: Percent of balance risked (default 1)
+        emotion:
+          type: ["string", "null"]
+          description: How the user felt (confiant, stressé, neutre...)
+        strategyId:
+          type: ["integer", "null"]
+    TradeResult:
+      type: object
+      required: [outcome, pnl, balance, futureCandles, feedback, riskReward]
+      properties:
+        outcome:
+          type: string
+          enum: [take-profit, stop-loss, expired, waited]
+        pnl:
+          type: number
+        balance:
+          type: number
+        exitPrice:
+          type: ["number", "null"]
+        riskReward:
+          type: ["number", "null"]
+        futureCandles:
+          type: array
+          items:
+            $ref: "#/components/schemas/Candle"
+        feedback:
+          type: array
+          description: Pedagogical feedback lines in French
+          items:
+            type: string
+    JournalEntry:
+      type: object
+      required: [id, market, direction, outcome, pnl, createdAt]
+      properties:
+        id:
+          type: integer
+        market:
+          type: string
+        direction:
+          type: string
+        outcome:
+          type: string
+        pnl:
+          type: number
+        riskReward:
+          type: ["number", "null"]
+        emotion:
+          type: ["string", "null"]
+        strategyName:
+          type: ["string", "null"]
+        feedback:
+          type: array
+          items:
+            type: string
+        createdAt:
+          type: string
+    JournalStats:
+      type: object
+      required: [totalTrades, wins, losses, winRate, avgRiskReward, balance, bestPnl, worstPnl]
+      properties:
+        totalTrades:
+          type: integer
+        wins:
+          type: integer
+        losses:
+          type: integer
+        winRate:
+          type: number
+        avgRiskReward:
+          type: ["number", "null"]
+        balance:
+          type: number
+        bestPnl:
+          type: ["number", "null"]
+        worstPnl:
+          type: ["number", "null"]
+    Journal:
+      type: object
+      required: [entries, stats]
+      properties:
+        entries:
+          type: array
+          items:
+            $ref: "#/components/schemas/JournalEntry"
+        stats:
+          $ref: "#/components/schemas/JournalStats"
+    StrategyInput:
+      type: object
+      required: [name, market, style, timeframe, context, entryRules, riskPercent]
+      properties:
+        name:
+          type: string
+        market:
+          type: string
+        style:
+          type: string
+        timeframe:
+          type: string
+        context:
+          type: array
+          items:
+            type: string
+        entryRules:
+          type: array
+          items:
+            type: string
+        stopLossRule:
+          type: ["string", "null"]
+        takeProfitRule:
+          type: ["string", "null"]
+        riskPercent:
+          type: number
+    Strategy:
+      type: object
+      required: [id, name, market, style, timeframe, context, entryRules, riskPercent, createdAt]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        market:
+          type: string
+        style:
+          type: string
+        timeframe:
+          type: string
+        context:
+          type: array
+          items:
+            type: string
+        entryRules:
+          type: array
+          items:
+            type: string
+        stopLossRule:
+          type: ["string", "null"]
+        takeProfitRule:
+          type: ["string", "null"]
+        riskPercent:
+          type: number
+        createdAt:
+          type: string
+    CoachAdvice:
+      type: object
+      required: [sections, generatedAt]
+      properties:
+        sections:
+          type: array
+          items:
+            type: object
+            required: [category, title, message]
+            properties:
+              category:
+                type: string
+                enum: [apprentissage, simulation, discipline]
+              title:
+                type: string
+              message:
+                type: string
+        generatedAt:
           type: string
     Testimonial:
       type: object

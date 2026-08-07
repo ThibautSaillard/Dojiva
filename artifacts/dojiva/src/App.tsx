@@ -6,6 +6,11 @@ import Home from '@/pages/home';
 import Onboarding from '@/pages/onboarding';
 import Academy from '@/pages/academy';
 import Lesson from '@/pages/lesson';
+import Simulator from '@/pages/simulator';
+import Laboratory from '@/pages/laboratory';
+import Coach from '@/pages/coach';
+import Journal from '@/pages/journal';
+import Profile from '@/pages/profile';
 import { Route, Switch, Router as WouterRouter } from 'wouter';
 
 const queryClient = new QueryClient({
@@ -24,6 +29,11 @@ function Router() {
       <Route path="/apprendre" component={Onboarding} />
       <Route path="/academie" component={Academy} />
       <Route path="/lecon/:id" component={Lesson} />
+      <Route path="/simulateur" component={Simulator} />
+      <Route path="/laboratoire" component={Laboratory} />
+      <Route path="/coach" component={Coach} />
+      <Route path="/journal" component={Journal} />
+      <Route path="/profil" component={Profile} />
       <Route component={NotFound} />
     </Switch>
   );

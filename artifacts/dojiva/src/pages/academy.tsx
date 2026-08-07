@@ -1,8 +1,9 @@
-import { Link, useLocation } from "wouter";
+import { useLocation } from "wouter";
 import { useGetProgress, useListWorlds } from "@workspace/api-client-react";
 import { CandleMascot } from "@/components/CandleMascot";
+import { Layout } from "@/components/Layout";
 import { motion } from "framer-motion";
-import { Heart, Flame, Zap, Lock, Star, ChevronRight } from "lucide-react";
+import { Lock, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export default function Academy() {
@@ -25,10 +26,8 @@ export default function Academy() {
   }
 
   return (
-    <div className="min-h-[100dvh] flex flex-col bg-white font-sans">
-      <TopBar progress={progress} />
-      
-      <main className="flex-1 max-w-2xl mx-auto w-full pb-32">
+    <Layout>
+      <div className="w-full">
         {worlds?.map((world, worldIndex) => (
           <WorldSection 
             key={world.id} 
@@ -37,62 +36,11 @@ export default function Academy() {
             progress={progress}
           />
         ))}
-      </main>
-      
-      <BottomNav />
-    </div>
-  );
-}
-
-function TopBar({ progress }: { progress: any }) {
-  return (
-    <header className="sticky top-0 z-50 bg-white border-b-2 border-gray-100 px-4 h-16 flex items-center justify-between shadow-sm">
-      <div className="flex items-center gap-2 text-primary font-black text-xl tracking-tighter">
-        <CandleMascot size={24} animate={false} mood="bullish" />
-        <span className="hidden sm:inline">dojiva</span>
       </div>
-      
-      <div className="flex items-center gap-4 sm:gap-6 font-bold text-gray-400">
-        <div className="flex items-center gap-1.5 hover:bg-gray-50 px-3 py-1.5 rounded-xl cursor-pointer transition-colors">
-          <img src="https://img.icons8.com/color/48/000000/france-circular.png" alt="FR" className="w-6 h-6" />
-        </div>
-        
-        <div className="flex items-center gap-1.5 text-orange-500 hover:bg-orange-50 px-3 py-1.5 rounded-xl cursor-pointer transition-colors">
-          <Flame className="w-5 h-5 fill-current" />
-          <span>{progress?.streak || 0}</span>
-        </div>
-        
-        <div className="flex items-center gap-1.5 text-[#ffc800] hover:bg-[#ffc800]/10 px-3 py-1.5 rounded-xl cursor-pointer transition-colors">
-          <Zap className="w-5 h-5 fill-current" />
-          <span>{progress?.xp || 0}</span>
-        </div>
-        
-        <div className="flex items-center gap-1.5 text-red-500 hover:bg-red-50 px-3 py-1.5 rounded-xl cursor-pointer transition-colors">
-          <Heart className="w-5 h-5 fill-current" />
-          <span>{progress?.hearts || 5}</span>
-        </div>
-      </div>
-    </header>
+    </Layout>
   );
 }
 
-function BottomNav() {
-  return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-white border-t-2 border-gray-100 flex justify-around items-center h-20 px-2 sm:px-6 z-50 pb-safe">
-      <NavItem icon={<div className="w-8 h-8 rounded-xl border-2 border-[#1cb0f6] bg-[#1cb0f6]/10 flex items-center justify-center"><Star className="w-5 h-5 text-[#1cb0f6]" /></div>} active />
-      <NavItem icon={<div className="w-8 h-8 rounded-xl border-2 border-gray-200 flex items-center justify-center"><Flame className="w-5 h-5 text-gray-400" /></div>} />
-      <NavItem icon={<div className="w-8 h-8 rounded-xl border-2 border-gray-200 flex items-center justify-center"><div className="w-5 h-5 bg-gray-400 rounded-full" /></div>} />
-    </nav>
-  );
-}
-
-function NavItem({ icon, active }: { icon: React.ReactNode, active?: boolean }) {
-  return (
-    <button className={cn("p-4 rounded-2xl transition-all", active ? "bg-[#1cb0f6]/10" : "hover:bg-gray-50")}>
-      {icon}
-    </button>
-  );
-}
 
 function WorldSection({ world, isFirst, progress }: { world: any, isFirst: boolean, progress: any }) {
   const isLocked = world.locked;
@@ -157,9 +105,9 @@ function WorldSection({ world, isFirst, progress }: { world: any, isFirst: boole
              <div className="bg-white rounded-3xl border-2 border-gray-200 shadow-sm p-6 max-w-sm text-center">
                 <Lock className="w-12 h-12 text-gray-300 mx-auto mb-4" />
                 <h3 className="text-xl font-black text-[#3c3c3c] mb-2">Section verrouillée</h3>
-                <p className="text-gray-500 font-medium mb-4">Termine les leçons précédentes pour débloquer cette section.</p>
+                <p className="text-gray-500 font-medium mb-4">Termine les leçons précédentes ou abonne-toi pour débloquer cette section.</p>
                 <button className="w-full bg-gray-100 text-gray-400 font-bold py-3 rounded-xl uppercase tracking-wider text-sm border-b-4 border-gray-200">
-                  Sauter ici ?
+                  Débloquer le reste de l'aventure
                 </button>
              </div>
            </div>

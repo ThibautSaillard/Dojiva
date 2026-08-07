@@ -90,7 +90,9 @@ export const CompleteLessonResponse = zod.object({
   "goal": zod.string().nullish(),
   "experienceLevel": zod.string().nullish(),
   "markets": zod.array(zod.string()).optional(),
-  "style": zod.string().nullish()
+  "style": zod.string().nullish(),
+  "premium": zod.boolean(),
+  "balance": zod.number().describe('Virtual simulator capital in EUR')
 })
 
 
@@ -107,7 +109,9 @@ export const GetProgressResponse = zod.object({
   "goal": zod.string().nullish(),
   "experienceLevel": zod.string().nullish(),
   "markets": zod.array(zod.string()).optional(),
-  "style": zod.string().nullish()
+  "style": zod.string().nullish(),
+  "premium": zod.boolean(),
+  "balance": zod.number().describe('Virtual simulator capital in EUR')
 })
 
 
@@ -131,7 +135,193 @@ export const SaveOnboardingResponse = zod.object({
   "goal": zod.string().nullish(),
   "experienceLevel": zod.string().nullish(),
   "markets": zod.array(zod.string()).optional(),
-  "style": zod.string().nullish()
+  "style": zod.string().nullish(),
+  "premium": zod.boolean(),
+  "balance": zod.number().describe('Virtual simulator capital in EUR')
+})
+
+
+/**
+ * @summary Activate the free premium trial and unlock all content
+ */
+export const ActivatePremiumResponse = zod.object({
+  "xp": zod.int(),
+  "level": zod.int(),
+  "streak": zod.int(),
+  "hearts": zod.int(),
+  "completedLessonIds": zod.array(zod.int()),
+  "onboarded": zod.boolean(),
+  "goal": zod.string().nullish(),
+  "experienceLevel": zod.string().nullish(),
+  "markets": zod.array(zod.string()).optional(),
+  "style": zod.string().nullish(),
+  "premium": zod.boolean(),
+  "balance": zod.number().describe('Virtual simulator capital in EUR')
+})
+
+
+/**
+ * @summary List badges with earned status
+ */
+export const ListBadgesResponseItem = zod.object({
+  "id": zod.int(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "description": zod.string(),
+  "emoji": zod.string(),
+  "earned": zod.boolean(),
+  "earnedAt": zod.string().nullish()
+})
+export const ListBadgesResponse = zod.array(ListBadgesResponseItem)
+
+
+/**
+ * @summary Generate a new simulator scenario (visible candles only)
+ */
+export const CreateScenarioResponse = zod.object({
+  "id": zod.int(),
+  "market": zod.string(),
+  "timeframe": zod.string(),
+  "candles": zod.array(zod.object({
+  "o": zod.number(),
+  "h": zod.number(),
+  "l": zod.number(),
+  "c": zod.number()
+})).describe('Visible candles only (the future stays hidden)'),
+  "balance": zod.number()
+})
+
+
+/**
+ * @summary Submit a trade decision and advance the market
+ */
+export const SubmitTradeBody = zod.object({
+  "scenarioId": zod.int(),
+  "direction": zod.enum(['buy', 'sell', 'wait']),
+  "entry": zod.number().nullish(),
+  "stopLoss": zod.number().nullish(),
+  "takeProfit": zod.number().nullish(),
+  "riskPercent": zod.number().nullish().describe('Percent of balance risked (default 1)'),
+  "emotion": zod.string().nullish().describe('How the user felt (confiant, stressé, neutre...)'),
+  "strategyId": zod.int().nullish()
+})
+
+export const SubmitTradeResponse = zod.object({
+  "outcome": zod.enum(['take-profit', 'stop-loss', 'expired', 'waited']),
+  "pnl": zod.number(),
+  "balance": zod.number(),
+  "exitPrice": zod.number().nullish(),
+  "riskReward": zod.number().nullable(),
+  "futureCandles": zod.array(zod.object({
+  "o": zod.number(),
+  "h": zod.number(),
+  "l": zod.number(),
+  "c": zod.number()
+})),
+  "feedback": zod.array(zod.string()).describe('Pedagogical feedback lines in French')
+})
+
+
+/**
+ * @summary Trading journal with statistics
+ */
+export const GetJournalResponse = zod.object({
+  "entries": zod.array(zod.object({
+  "id": zod.int(),
+  "market": zod.string(),
+  "direction": zod.string(),
+  "outcome": zod.string(),
+  "pnl": zod.number(),
+  "riskReward": zod.number().nullish(),
+  "emotion": zod.string().nullish(),
+  "strategyName": zod.string().nullish(),
+  "feedback": zod.array(zod.string()).optional(),
+  "createdAt": zod.string()
+})),
+  "stats": zod.object({
+  "totalTrades": zod.int(),
+  "wins": zod.int(),
+  "losses": zod.int(),
+  "winRate": zod.number(),
+  "avgRiskReward": zod.number().nullable(),
+  "balance": zod.number(),
+  "bestPnl": zod.number().nullable(),
+  "worstPnl": zod.number().nullable()
+})
+})
+
+
+/**
+ * @summary List saved strategies
+ */
+export const ListStrategiesResponseItem = zod.object({
+  "id": zod.int(),
+  "name": zod.string(),
+  "market": zod.string(),
+  "style": zod.string(),
+  "timeframe": zod.string(),
+  "context": zod.array(zod.string()),
+  "entryRules": zod.array(zod.string()),
+  "stopLossRule": zod.string().nullish(),
+  "takeProfitRule": zod.string().nullish(),
+  "riskPercent": zod.number(),
+  "createdAt": zod.string()
+})
+export const ListStrategiesResponse = zod.array(ListStrategiesResponseItem)
+
+
+/**
+ * @summary Create a strategy from the builder
+ */
+export const CreateStrategyBody = zod.object({
+  "name": zod.string(),
+  "market": zod.string(),
+  "style": zod.string(),
+  "timeframe": zod.string(),
+  "context": zod.array(zod.string()),
+  "entryRules": zod.array(zod.string()),
+  "stopLossRule": zod.string().nullish(),
+  "takeProfitRule": zod.string().nullish(),
+  "riskPercent": zod.number()
+})
+
+export const CreateStrategyResponse = zod.object({
+  "id": zod.int(),
+  "name": zod.string(),
+  "market": zod.string(),
+  "style": zod.string(),
+  "timeframe": zod.string(),
+  "context": zod.array(zod.string()),
+  "entryRules": zod.array(zod.string()),
+  "stopLossRule": zod.string().nullish(),
+  "takeProfitRule": zod.string().nullish(),
+  "riskPercent": zod.number(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Delete a strategy
+ */
+export const DeleteStrategyParams = zod.object({
+  "id": zod.coerce.number().int()
+})
+
+export const DeleteStrategyResponse = zod.object({
+  "ok": zod.boolean()
+})
+
+
+/**
+ * @summary Generate personalized AI coach advice from learning and trading history
+ */
+export const GetCoachAdviceResponse = zod.object({
+  "sections": zod.array(zod.object({
+  "category": zod.enum(['apprentissage', 'simulation', 'discipline']),
+  "title": zod.string(),
+  "message": zod.string()
+})),
+  "generatedAt": zod.string()
 })
 
 

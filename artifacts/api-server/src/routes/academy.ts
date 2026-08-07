@@ -8,6 +8,8 @@ import {
   playerProgressTable,
   completedLessonsTable,
   testimonialsTable,
+  badgesTable,
+  earnedBadgesTable,
 } from "@workspace/db";
 import {
   ListWorldsResponse,
@@ -19,10 +21,26 @@ import {
   GetProgressResponse,
   SaveOnboardingBody,
   SaveOnboardingResponse,
+  ActivatePremiumResponse,
   ListTestimonialsResponse,
 } from "@workspace/api-zod";
 
 const router: IRouter = Router();
+
+async function awardBadge(code: string) {
+  const [badge] = await db
+    .select()
+    .from(badgesTable)
+    .where(eq(badgesTable.code, code));
+  if (!badge) return;
+  const earned = await db
+    .select()
+    .from(earnedBadgesTable)
+    .where(eq(earnedBadgesTable.badgeId, badge.id));
+  if (earned.length === 0) {
+    await db.insert(earnedBadgesTable).values({ badgeId: badge.id });
+  }
+}
 
 async function getOrCreateProgress() {
   const [existing] = await db.select().from(playerProgressTable).limit(1);
@@ -50,6 +68,8 @@ async function buildProgressPayload() {
     experienceLevel: progress.experienceLevel,
     markets: progress.markets ?? [],
     style: progress.style,
+    premium: progress.premium,
+    balance: progress.balance,
   };
 }
 
@@ -62,11 +82,24 @@ router.get("/worlds", async (_req, res): Promise<void> => {
     .select()
     .from(lessonsTable)
     .orderBy(asc(lessonsTable.order));
+  const progress = await getOrCreateProgress();
   const payload = worlds.map((w) => ({
     ...w,
-    lessons: lessons.filter((l) => l.worldId === w.id),
+    locked: progress.premium ? false : w.locked,
+    lessons: lessons
+      .filter((l) => l.worldId === w.id)
+      .map((l) => (progress.premium ? { ...l, free: true } : l)),
   }));
   res.json(ListWorldsResponse.parse(payload));
+});
+
+router.post("/premium/activate", async (_req, res): Promise<void> => {
+  const progress = await getOrCreateProgress();
+  await db
+    .update(playerProgressTable)
+    .set({ premium: true })
+    .where(eq(playerProgressTable.id, progress.id));
+  res.json(ActivatePremiumResponse.parse(await buildProgressPayload()));
 });
 
 router.get("/lessons/:id", async (req, res): Promise<void> => {
@@ -160,6 +193,21 @@ router.post("/lessons/:id/complete", async (req, res): Promise<void> => {
       lastActivityAt: now,
     })
     .where(eq(playerProgressTable.id, progress.id));
+
+  await awardBadge("first-lesson");
+  if (streak >= 3) await awardBadge("streak-3");
+  const world1Lessons = (
+    await db
+      .select({ id: lessonsTable.id })
+      .from(lessonsTable)
+      .where(eq(lessonsTable.worldId, 1))
+  ).map((l) => l.id);
+  const done = await db
+    .select({ lessonId: completedLessonsTable.lessonId })
+    .from(completedLessonsTable);
+  const doneSet = new Set(done.map((d) => d.lessonId));
+  if (world1Lessons.length > 0 && world1Lessons.every((id) => doneSet.has(id)))
+    await awardBadge("world-1");
 
   res.json(CompleteLessonResponse.parse(await buildProgressPayload()));
 });

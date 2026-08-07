@@ -102,6 +102,9 @@ export interface Progress {
   markets?: string[];
   /** @nullable */
   style?: string | null;
+  premium: boolean;
+  /** Virtual simulator capital in EUR */
+  balance: number;
 }
 
 export interface OnboardingInput {
@@ -109,6 +112,177 @@ export interface OnboardingInput {
   experienceLevel: string;
   markets: string[];
   style: string;
+}
+
+export interface OkMessage {
+  ok: boolean;
+}
+
+export interface Badge {
+  id: number;
+  code: string;
+  title: string;
+  description: string;
+  emoji: string;
+  earned: boolean;
+  /** @nullable */
+  earnedAt?: string | null;
+}
+
+export interface Candle {
+  o: number;
+  h: number;
+  l: number;
+  c: number;
+}
+
+export interface Scenario {
+  id: number;
+  market: string;
+  timeframe: string;
+  /** Visible candles only (the future stays hidden) */
+  candles: Candle[];
+  balance: number;
+}
+
+export type TradeInputDirection = typeof TradeInputDirection[keyof typeof TradeInputDirection];
+
+
+export const TradeInputDirection = {
+  buy: 'buy',
+  sell: 'sell',
+  wait: 'wait',
+} as const;
+
+export interface TradeInput {
+  scenarioId: number;
+  direction: TradeInputDirection;
+  /** @nullable */
+  entry?: number | null;
+  /** @nullable */
+  stopLoss?: number | null;
+  /** @nullable */
+  takeProfit?: number | null;
+  /**
+     * Percent of balance risked (default 1)
+     * @nullable
+     */
+  riskPercent?: number | null;
+  /**
+     * How the user felt (confiant, stressé, neutre...)
+     * @nullable
+     */
+  emotion?: string | null;
+  /** @nullable */
+  strategyId?: number | null;
+}
+
+export type TradeResultOutcome = typeof TradeResultOutcome[keyof typeof TradeResultOutcome];
+
+
+export const TradeResultOutcome = {
+  'take-profit': 'take-profit',
+  'stop-loss': 'stop-loss',
+  expired: 'expired',
+  waited: 'waited',
+} as const;
+
+export interface TradeResult {
+  outcome: TradeResultOutcome;
+  pnl: number;
+  balance: number;
+  /** @nullable */
+  exitPrice?: number | null;
+  /** @nullable */
+  riskReward: number | null;
+  futureCandles: Candle[];
+  /** Pedagogical feedback lines in French */
+  feedback: string[];
+}
+
+export interface JournalEntry {
+  id: number;
+  market: string;
+  direction: string;
+  outcome: string;
+  pnl: number;
+  /** @nullable */
+  riskReward?: number | null;
+  /** @nullable */
+  emotion?: string | null;
+  /** @nullable */
+  strategyName?: string | null;
+  feedback?: string[];
+  createdAt: string;
+}
+
+export interface JournalStats {
+  totalTrades: number;
+  wins: number;
+  losses: number;
+  winRate: number;
+  /** @nullable */
+  avgRiskReward: number | null;
+  balance: number;
+  /** @nullable */
+  bestPnl: number | null;
+  /** @nullable */
+  worstPnl: number | null;
+}
+
+export interface Journal {
+  entries: JournalEntry[];
+  stats: JournalStats;
+}
+
+export interface StrategyInput {
+  name: string;
+  market: string;
+  style: string;
+  timeframe: string;
+  context: string[];
+  entryRules: string[];
+  /** @nullable */
+  stopLossRule?: string | null;
+  /** @nullable */
+  takeProfitRule?: string | null;
+  riskPercent: number;
+}
+
+export interface Strategy {
+  id: number;
+  name: string;
+  market: string;
+  style: string;
+  timeframe: string;
+  context: string[];
+  entryRules: string[];
+  /** @nullable */
+  stopLossRule?: string | null;
+  /** @nullable */
+  takeProfitRule?: string | null;
+  riskPercent: number;
+  createdAt: string;
+}
+
+export type CoachAdviceSectionsItemCategory = typeof CoachAdviceSectionsItemCategory[keyof typeof CoachAdviceSectionsItemCategory];
+
+
+export const CoachAdviceSectionsItemCategory = {
+  apprentissage: 'apprentissage',
+  simulation: 'simulation',
+  discipline: 'discipline',
+} as const;
+
+export type CoachAdviceSectionsItem = {
+  category: CoachAdviceSectionsItemCategory;
+  title: string;
+  message: string;
+};
+
+export interface CoachAdvice {
+  sections: CoachAdviceSectionsItem[];
+  generatedAt: string;
 }
 
 export interface Testimonial {
