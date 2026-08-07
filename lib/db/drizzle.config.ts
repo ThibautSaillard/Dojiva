@@ -1,8 +1,9 @@
 import { defineConfig } from "drizzle-kit";
 import path from "path";
 
-const databaseUrl =
-  process.env.SUPABASE_DATABASE_URL || process.env.DATABASE_URL;
+import { resolveDatabaseUrl } from "./src/url";
+
+const databaseUrl = resolveDatabaseUrl();
 
 if (!databaseUrl) {
   throw new Error("DATABASE_URL, ensure the database is provisioned");
