@@ -1,6 +1,6 @@
-# [Project name]
+# Dojiva
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+Le "Duolingo du trading" : une app web gamifiée (en français) qui apprend aux débutants complets à comprendre les marchés financiers via des leçons interactives, XP, séries et quiz.
 
 ## Run & Operate
 
@@ -18,28 +18,42 @@ _Replace the heading above with the project's name, and this line with one sente
 - DB: PostgreSQL + Drizzle ORM
 - Validation: Zod (`zod/v4`), `drizzle-zod`
 - API codegen: Orval (from OpenAPI spec)
-- Build: esbuild (CJS bundle)
+- Frontend: React + Vite (`artifacts/dojiva`), framer-motion, wouter, TanStack Query
 
 ## Where things live
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- `lib/api-spec/openapi.yaml` — source of truth for API contracts
+- `lib/db/src/schema/academy.ts` — worlds, lessons, lesson_steps, player_progress, completed_lessons, testimonials
+- `artifacts/api-server/src/routes/academy.ts` — all Dojiva endpoints (/worlds, /lessons, /progress, /testimonials)
+- `artifacts/dojiva/src/pages/` — landing (home), onboarding (/apprendre), academy map (/academie), lesson player (/lecon/:id)
+- `artifacts/dojiva/src/components/` — CandleMascot (animated SVG mascot), candlestick chart renderer
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- Single anonymous player: one global `player_progress` row (no auth yet). Level = floor(xp/100)+1, computed server-side.
+- Lesson steps are typed `info | quiz | chart-quiz`; chart-quiz stores candle data as a JSON string in `lesson_steps.chart`.
+- Paywall after lesson 5 is visual only ("bientôt disponible") — no payment integration yet.
+- Codegen script runs a `sed` to rewrite `from 'zod'` → `from 'zod/v4'` in `lib/api-zod/src/generated/api.ts` (Orval v8 emits zod-v4 API like `zod.int()`).
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+- Landing page façon Duolingo : hero animé avec mascottes bougies japonaises, sections ludiques, carrousel d'avis ("Ils donnent leur avis"), disclaimer éducatif.
+- Onboarding 4 étapes (objectif, niveau, marchés, style) → parcours personnalisé.
+- Académie : chemin vertical de leçons par mondes, XP / série / cœurs, monde 1 gratuit (5 leçons), mondes 2-6 verrouillés premium.
+- Lecteur de leçon : étapes info/quiz/chart-quiz, feedback animé, écran de célébration XP, paywall après la leçon 5.
 
 ## User preferences
 
-_Populate as you build — explicit user instructions worth remembering across sessions._
+- Toute l'interface en français.
+- Style Duolingo assumé : mascottes animées, grosses animations de réussite, boutons chunky.
+- Le nom de l'app est Dojiva (remplace "TradeQuest" du document de concept).
 
 ## Gotchas
 
-_Populate as you build — sharp edges, "always run X before Y" rules._
+- After changing `lib/api-spec/openapi.yaml`, always run codegen before using new hooks/schemas.
+- `params` in path/query are coerced by generated Zod schemas; import exact names from `@workspace/api-zod` (grep, don't guess).
 
 ## Pointers
 
 - See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and package details
+- Concept complet du produit : `attached_assets/Pasted-Nom-de-l-application-Dojiva-Le-Duolingo-TradingView-Sim_1786133981264.txt`

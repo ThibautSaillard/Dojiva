@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "Dojiva"
+description = "Dojiva est le Duolingo du trading : une app web gamifiée qui apprend aux débutants complets à comprendre les marchés financiers via un parcours de leçons interactives façon Duolingo (chemin vertical, XP, séries, quiz, animations de réussite), avec une landing page ludique animée autour des bougies japonaises et un paywall après les 5 premières leçons gratuites."
+version = "1.0.0"
+id = "artifacts/dojiva"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 25954
+
+[services.development]
+run = "pnpm --filter @workspace/dojiva run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/dojiva", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/dojiva/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "25954"
+BASE_PATH = "/"

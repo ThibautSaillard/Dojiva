@@ -3,13 +3,15 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Dojiva API - gamified trading learning
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: academy
+    description: Lessons, worlds and gamified progression
 paths:
   /healthz:
     get:
@@ -24,6 +26,118 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /worlds:
+    get:
+      operationId: listWorlds
+      tags: [academy]
+      summary: List learning worlds with their lessons
+      responses:
+        "200":
+          description: Worlds with lessons
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/World"
+  /lessons/{id}:
+    get:
+      operationId: getLesson
+      tags: [academy]
+      summary: Get a lesson with its interactive steps
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Lesson detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LessonDetail"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiMessage"
+  /lessons/{id}/complete:
+    post:
+      operationId: completeLesson
+      tags: [academy]
+      summary: Mark a lesson as completed and award XP
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LessonResult"
+      responses:
+        "200":
+          description: Updated progress
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Progress"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiMessage"
+  /progress:
+    get:
+      operationId: getProgress
+      tags: [academy]
+      summary: Get current player progress (XP, streak, level, completed lessons)
+      responses:
+        "200":
+          description: Player progress
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Progress"
+  /progress/onboarding:
+    post:
+      operationId: saveOnboarding
+      tags: [academy]
+      summary: Save onboarding answers and personalize the path
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OnboardingInput"
+      responses:
+        "200":
+          description: Updated progress
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Progress"
+  /testimonials:
+    get:
+      operationId: listTestimonials
+      tags: [academy]
+      summary: List landing-page testimonials
+      responses:
+        "200":
+          description: Testimonials
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Testimonial"
 components:
   schemas:
     HealthStatus:
@@ -33,4 +147,162 @@ components:
           type: string
       required:
         - status
-
+    ApiMessage:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: string
+    World:
+      type: object
+      required: [id, title, subtitle, emoji, order, locked, lessons]
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        subtitle:
+          type: string
+        emoji:
+          type: string
+        order:
+          type: integer
+        locked:
+          type: boolean
+          description: True when the whole world is behind the premium paywall
+        lessons:
+          type: array
+          items:
+            $ref: "#/components/schemas/LessonSummary"
+    LessonSummary:
+      type: object
+      required: [id, worldId, title, order, icon, free, xpReward]
+      properties:
+        id:
+          type: integer
+        worldId:
+          type: integer
+        title:
+          type: string
+        order:
+          type: integer
+        icon:
+          type: string
+          description: Icon key (star, chart, candle, book, trophy, chest...)
+        free:
+          type: boolean
+        xpReward:
+          type: integer
+    LessonDetail:
+      type: object
+      required: [id, worldId, title, order, icon, free, xpReward, steps]
+      properties:
+        id:
+          type: integer
+        worldId:
+          type: integer
+        title:
+          type: string
+        order:
+          type: integer
+        icon:
+          type: string
+        free:
+          type: boolean
+        xpReward:
+          type: integer
+        steps:
+          type: array
+          items:
+            $ref: "#/components/schemas/LessonStep"
+    LessonStep:
+      type: object
+      required: [id, type, prompt]
+      properties:
+        id:
+          type: integer
+        type:
+          type: string
+          enum: [info, quiz, chart-quiz]
+          description: info = animated explanation card; quiz = multiple choice; chart-quiz = question about a rendered candlestick chart
+        prompt:
+          type: string
+        body:
+          type: ["string", "null"]
+          description: Explanation text for info steps
+        options:
+          type: array
+          items:
+            type: string
+        correctIndex:
+          type: ["integer", "null"]
+        explanation:
+          type: ["string", "null"]
+          description: Shown after answering
+        chart:
+          type: ["string", "null"]
+          description: JSON-encoded candle data for chart-quiz steps
+    LessonResult:
+      type: object
+      required: [score, total]
+      properties:
+        score:
+          type: integer
+        total:
+          type: integer
+    Progress:
+      type: object
+      required: [xp, level, streak, hearts, completedLessonIds, onboarded]
+      properties:
+        xp:
+          type: integer
+        level:
+          type: integer
+        streak:
+          type: integer
+        hearts:
+          type: integer
+        completedLessonIds:
+          type: array
+          items:
+            type: integer
+        onboarded:
+          type: boolean
+        goal:
+          type: ["string", "null"]
+        experienceLevel:
+          type: ["string", "null"]
+        markets:
+          type: array
+          items:
+            type: string
+        style:
+          type: ["string", "null"]
+    OnboardingInput:
+      type: object
+      required: [goal, experienceLevel, markets, style]
+      properties:
+        goal:
+          type: string
+        experienceLevel:
+          type: string
+        markets:
+          type: array
+          items:
+            type: string
+        style:
+          type: string
+    Testimonial:
+      type: object
+      required: [id, name, date, rating, text]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        date:
+          type: string
+        rating:
+          type: integer
+        text:
+          type: string
