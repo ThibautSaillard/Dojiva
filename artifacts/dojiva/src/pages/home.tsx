@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "wouter";
 import { ArrowRight, ChevronLeft, ChevronRight, Star, TrendingUp, ShieldCheck, Zap } from "lucide-react";
 import { PhoneShowcase } from "../components/PhoneShowcase";
+import { motion, useReducedMotion } from "framer-motion";
 import avatarYanis from "@assets/IMG_9202_1786143915237.jpeg";
 import avatarLucas from "@assets/IMG_9204_1786143915237.jpeg";
 import avatarMehdi from "@assets/IMG_9206_1786143915237.jpeg";
@@ -53,9 +54,11 @@ export default function Home() {
   const testimonial = testimonials[activeTestimonial];
 
   return (
-    <div className="min-h-[100dvh] flex flex-col bg-background text-foreground relative overflow-hidden">
-      {/* Background glow effects */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-primary/20 blur-[120px] rounded-full pointer-events-none" />
+    <div className="min-h-[100dvh] flex flex-col bg-background text-foreground relative overflow-x-clip">
+      {/* Background glow effects — clipped in their own layer so position:sticky keeps working */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-primary/20 blur-[120px] rounded-full" />
+      </div>
       
       <header className="px-6 py-6 flex items-center justify-between relative z-10">
         <div className="flex items-center gap-2 font-bold text-2xl tracking-tight">
@@ -102,24 +105,85 @@ export default function Home() {
           onSelect={setActiveTestimonial}
         />
 
-        <div className="mt-24 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl w-full text-left">
-          <FeatureCard 
-            icon={<TrendingUp className="w-6 h-6 text-primary" />}
-            title="Graphiques Interactifs"
-            description="Apprends à lire le marché sur de vrais graphiques. Identifie les structures, trace tes zones."
-          />
-          <FeatureCard 
-            icon={<ShieldCheck className="w-6 h-6 text-primary" />}
-            title="Simulateur Sans Risque"
-            description="Entraîne-toi avec 10 000€ virtuels. Rejoue les bougies une par une, sans risquer ton vrai capital."
-          />
-          <FeatureCard 
-            icon={<Zap className="w-6 h-6 text-primary" />}
-            title="Progression Gamifiée"
-            description="Gagne de l'XP, débloque des badges et garde ton streak actif. L'apprentissage devient addictif."
-          />
-        </div>
+        <StackedFeatures />
       </main>
+    </div>
+  );
+}
+
+const featuresData = [
+  {
+    icon: <TrendingUp className="w-5 h-5 md:w-6 md:h-6 text-primary" />,
+    title: "Graphiques Interactifs",
+    description: "Apprends à lire le marché sur de vrais graphiques. Identifie les structures, trace tes zones.",
+    image: "/assets/feature-chart.jpg",
+    number: "01"
+  },
+  {
+    icon: <ShieldCheck className="w-5 h-5 md:w-6 md:h-6 text-primary" />,
+    title: "Simulateur Sans Risque",
+    description: "Entraîne-toi avec 10 000€ virtuels. Rejoue les bougies une par une, sans risquer ton vrai capital.",
+    image: "/assets/feature-simulator.jpg",
+    number: "02"
+  },
+  {
+    icon: <Zap className="w-5 h-5 md:w-6 md:h-6 text-primary" />,
+    title: "Progression Gamifiée",
+    description: "Gagne de l'XP, débloque des badges et garde ton streak actif. L'apprentissage devient addictif.",
+    image: "/assets/feature-gamification.jpg",
+    number: "03"
+  }
+];
+
+function StackedFeatures() {
+  const reducedMotion = useReducedMotion();
+
+  return (
+    <div className="relative mt-24 max-w-4xl w-full mx-auto pb-[10vh]">
+      <style>{`
+        .stack-card { top: calc(10vh + (var(--offset) * 75px)); }
+        @media (min-width: 768px) {
+          .stack-card { top: calc(10vh + (var(--offset) * 95px)); }
+        }
+      `}</style>
+      
+      {featuresData.map((f, i) => (
+        <motion.div
+          key={i}
+          initial={reducedMotion ? false : { opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-10%" }}
+          transition={{ duration: 0.5, delay: 0.1 * i }}
+          className="stack-card sticky w-full rounded-[2rem] md:rounded-[2.5rem] bg-[#09090b] border border-white/5 shadow-[0_-15px_40px_rgba(0,0,0,0.6)] overflow-hidden flex flex-col mb-[25vh] md:mb-[40vh] last:mb-0"
+          style={{ '--offset': i } as React.CSSProperties}
+        >
+          {/* Header Row */}
+          <div className="flex items-center gap-4 p-5 md:p-8 bg-[#09090b] relative z-10">
+            <div className="w-12 h-12 md:w-14 md:h-14 shrink-0 rounded-full bg-primary/20 flex items-center justify-center">
+              {f.icon}
+            </div>
+            <div className="flex flex-col text-left">
+              <h3 className="text-lg md:text-2xl font-bold text-white tracking-tight">{f.title}</h3>
+              <p className="text-xs md:text-sm text-white/50">{f.description}</p>
+            </div>
+          </div>
+          
+          {/* Body Image */}
+          <div className="relative w-full h-[320px] md:h-[450px] bg-black overflow-hidden">
+            <img 
+              src={f.image} 
+              alt={f.title} 
+              className="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity duration-700"
+            />
+            {/* Dark gradient overlay from bottom to blend the image seamlessly */}
+            <div className="absolute inset-0 bg-gradient-to-t from-[#09090b] via-[#09090b]/10 to-transparent pointer-events-none" />
+            
+            <div className="absolute bottom-6 right-8 md:bottom-10 md:right-12 text-6xl md:text-8xl font-black text-white/5 tracking-tighter select-none pointer-events-none">
+              {f.number}
+            </div>
+          </div>
+        </motion.div>
+      ))}
     </div>
   );
 }
@@ -138,49 +202,51 @@ function TestimonialsSection({
   onSelect: (index: number) => void;
 }) {
   return (
-    <section className="mt-28 w-full max-w-5xl text-left" aria-labelledby="testimonials-title">
-      <div className="mb-8 flex flex-col items-start justify-between gap-5 sm:flex-row sm:items-end">
+    <section className="mt-16 w-full max-w-4xl text-left" aria-labelledby="testimonials-title">
+      <div className="mb-6 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
         <div>
-          <p className="mb-3 text-xs font-bold uppercase tracking-[0.24em] text-primary">La communauté Dojiva</p>
-          <h2 id="testimonials-title" className="text-3xl font-extrabold uppercase tracking-tight sm:text-5xl">
+          <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-primary">La communauté Dojiva</p>
+          <h2 id="testimonials-title" className="text-2xl font-extrabold uppercase tracking-tight sm:text-3xl">
             Ils donnent <span className="text-primary">leur avis</span>
           </h2>
         </div>
-        <p className="max-w-xs text-sm leading-relaxed text-muted-foreground sm:text-right">
+        <p className="max-w-[280px] text-xs leading-relaxed text-muted-foreground sm:text-right">
           Des débutants qui ont décidé de comprendre avant de se lancer.
         </p>
       </div>
 
-      <div className="relative px-0 sm:px-10">
+      <div className="relative px-0 sm:px-8">
         <button
           type="button"
           aria-label="Avis précédent"
           onClick={onPrevious}
-          className="absolute left-0 top-1/2 z-10 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-card text-muted-foreground shadow-lg transition hover:border-primary hover:text-primary sm:flex"
+          className="absolute left-0 top-1/2 z-10 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-card text-muted-foreground shadow-sm transition hover:border-primary hover:text-primary sm:flex"
         >
-          <ChevronLeft className="h-5 w-5" />
+          <ChevronLeft className="h-4 w-4" />
         </button>
 
-        <article className="min-h-[360px] rounded-[2rem] border border-border bg-card/90 p-6 shadow-2xl shadow-black/10 transition-all duration-300 sm:min-h-[330px] sm:p-10">
-          <div className="flex items-center gap-1 text-primary" aria-label="5 étoiles sur 5">
-            {Array.from({ length: 5 }).map((_, index) => (
-              <Star key={index} className="h-6 w-6 fill-current sm:h-7 sm:w-7" />
-            ))}
+        <article className="min-h-[220px] rounded-[1.5rem] border border-border bg-card/90 p-5 shadow-xl shadow-black/5 transition-all duration-300 sm:min-h-[200px] sm:p-8 flex flex-col justify-between">
+          <div>
+            <div className="flex items-center gap-1 text-primary" aria-label="5 étoiles sur 5">
+              {Array.from({ length: 5 }).map((_, index) => (
+                <Star key={index} className="h-4 w-4 fill-current sm:h-5 sm:w-5" />
+              ))}
+            </div>
+
+            <blockquote className="mt-4 max-w-2xl text-base font-medium leading-relaxed tracking-tight text-foreground sm:text-lg">
+              “{testimonial.quote}”
+            </blockquote>
           </div>
 
-          <blockquote className="mt-8 max-w-3xl text-xl font-medium leading-relaxed tracking-tight text-foreground sm:text-3xl">
-            “{testimonial.quote}”
-          </blockquote>
-
-          <div className="mt-9 flex items-center gap-4 rounded-2xl bg-background/80 p-3 sm:max-w-sm sm:p-4">
+          <div className="mt-6 flex items-center gap-3 rounded-xl bg-background/80 p-2.5 sm:max-w-[280px] sm:p-3">
             <img
               src={testimonial.avatar}
               alt={`Photo de profil de ${testimonial.name}`}
-              className="h-14 w-14 rounded-full object-cover ring-2 ring-primary/20 sm:h-16 sm:w-16"
+              className="h-10 w-10 rounded-full object-cover ring-2 ring-primary/20 sm:h-12 sm:w-12"
             />
             <div>
-              <p className="font-bold text-foreground">{testimonial.name}</p>
-              <p className="mt-1 text-sm text-muted-foreground">{testimonial.date}</p>
+              <p className="font-bold text-sm text-foreground">{testimonial.name}</p>
+              <p className="text-xs text-muted-foreground">{testimonial.date}</p>
             </div>
           </div>
         </article>
@@ -189,13 +255,13 @@ function TestimonialsSection({
           type="button"
           aria-label="Avis suivant"
           onClick={onNext}
-          className="absolute right-0 top-1/2 z-10 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-primary/40 bg-primary text-primary-foreground shadow-lg shadow-primary/20 transition hover:bg-primary/90 sm:flex"
+          className="absolute right-0 top-1/2 z-10 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-primary/40 bg-primary text-primary-foreground shadow-sm shadow-primary/20 transition hover:bg-primary/90 sm:flex"
         >
-          <ChevronRight className="h-5 w-5" />
+          <ChevronRight className="h-4 w-4" />
         </button>
       </div>
 
-      <div className="mt-7 flex items-center justify-center gap-2" aria-label="Choisir un avis">
+      <div className="mt-5 flex items-center justify-center gap-1.5" aria-label="Choisir un avis">
         {testimonials.map((item, index) => (
           <button
             key={item.name}
@@ -203,28 +269,14 @@ function TestimonialsSection({
             aria-label={`Afficher l'avis de ${item.name}`}
             aria-current={activeIndex === index}
             onClick={() => onSelect(index)}
-            className={`h-3 rounded-full transition-all ${
+            className={`h-2 rounded-full transition-all ${
               activeIndex === index
-                ? "w-10 bg-primary"
-                : "w-3 bg-muted-foreground/30 hover:bg-muted-foreground/60"
+                ? "w-8 bg-primary"
+                : "w-2 bg-muted-foreground/30 hover:bg-muted-foreground/60"
             }`}
           />
         ))}
       </div>
     </section>
-  );
-}
-
-function FeatureCard({ icon, title, description }: { icon: React.ReactNode, title: string, description: string }) {
-  return (
-    <div className="p-6 rounded-2xl bg-card border border-border flex flex-col gap-4">
-      <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
-        {icon}
-      </div>
-      <h3 className="text-xl font-bold">{title}</h3>
-      <p className="text-muted-foreground leading-relaxed">
-        {description}
-      </p>
-    </div>
   );
 }

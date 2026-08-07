@@ -1,0 +1,981 @@
+REFONTE COMPLÈTE DE LA SECTION « SIMULATEUR »
+
+IMPORTANT :
+La section Simulateur actuelle est à refaire presque entièrement.
+
+Ne fais PAS une simple amélioration visuelle de l'écran existant.
+Je veux reconstruire l'expérience UX/UI et la logique du simulateur.
+
+L'écran actuel ressemble à :
+- un graphique assez petit
+- un montant en haut
+- trois boutons Acheter / Patienter / Vendre
+
+Ce n'est PAS suffisamment clair.
+On ne comprend pas immédiatement :
+- ce qu'on doit analyser
+- ce qu'on doit faire
+- où placer son entrée
+- où placer son Stop Loss
+- où placer son Take Profit
+- quel est le risque
+- ce qui se passe après la décision
+- pourquoi la décision était bonne ou mauvaise
+
+Je veux transformer cette section en un véritable :
+« simulateur d'entraînement au trading »
+
+L'expérience doit donner l'impression d'un mélange entre :
+Duolingo + TradingView + jeu vidéo d'entraînement au trading.
+
+==================================================
+OBJECTIF PRINCIPAL
+==================================================
+
+L'utilisateur doit suivre cette boucle :
+
+MISSION
+↓
+OBSERVER LE MARCHÉ
+↓
+ANALYSER
+↓
+PRENDRE UNE DÉCISION
+↓
+PLACER SON TRADE
+↓
+DÉFINIR LE RISQUE
+↓
+FAIRE AVANCER LE MARCHÉ
+↓
+DÉCOUVRIR LE RÉSULTAT
+↓
+COMPRENDRE SON ERREUR
+↓
+GAGNER DE L'XP
+↓
+PASSER À LA MISSION SUIVANTE
+
+L'utilisateur ne doit jamais être perdu.
+
+À chaque étape, l'application doit lui dire exactement quoi faire.
+
+==================================================
+1. NOUVEL ÉCRAN D'ACCUEIL DU SIMULATEUR
+==================================================
+
+Créer une page beaucoup plus premium.
+
+Titre :
+
+« Simulateur »
+
+Sous-titre :
+
+« Entraîne-toi sur les marchés sans risquer ton argent. »
+
+Afficher plusieurs modes sous forme de cartes :
+
+🎯 MISSIONS
+
+« Des scénarios pour apprendre à analyser un marché. »
+
+🧠 ANALYSE
+
+« Entraîne-toi à lire la structure, les zones et le contexte. »
+
+⚔️ CHALLENGES
+
+« Prends les bonnes décisions sous pression. »
+
+🔬 BACKTEST
+
+« Teste tes stratégies sur des données historiques. »
+
+🎮 LIBRE
+
+« Entraîne-toi librement avec du capital virtuel. »
+
+Pour le MVP, rendre au minimum le mode MISSIONS fonctionnel.
+
+==================================================
+2. ÉCRAN DE MISSION
+==================================================
+
+Quand l'utilisateur démarre une mission :
+
+Afficher en haut :
+
+MISSION 04
+
+« Lire la structure »
+
+EUR/USD · 15 min
+
+Capital virtuel :
+10 000 €
+
+Risque maximum :
+1 %
+
+Progression :
+4 / 10
+
+Puis afficher une consigne très claire.
+
+Exemple :
+
+« Que ferais-tu ici ? »
+
+Sous-texte :
+
+« Observe la tendance, la structure et les zones importantes avant de prendre ta décision. »
+
+NE PAS afficher immédiatement trop d'informations.
+
+L'objectif est que l'utilisateur regarde réellement le graphique.
+
+==================================================
+3. LE GRAPHIQUE DOIT ÊTRE LE CŒUR DE L'ÉCRAN
+==================================================
+
+Le graphique actuel est beaucoup trop petit.
+
+Créer un véritable graphique de trading.
+
+Utiliser des chandeliers japonais.
+
+Afficher :
+
+- bougies
+- prix sur l'axe vertical
+- temps sur l'axe horizontal
+- grille discrète
+- volume
+- timeframe
+- symbole
+- navigation
+- zoom
+- déplacement
+
+Le graphique doit être suffisamment grand pour être analysé.
+
+Sur desktop :
+prendre une grande partie de l'écran.
+
+Sur mobile :
+le graphique doit prendre environ 60-70 % de l'espace disponible pendant la phase d'analyse.
+
+NE PAS créer un simple graphique décoratif.
+
+Il doit être interactif.
+
+==================================================
+4. OUTILS DU GRAPHIQUE
+==================================================
+
+Ajouter une petite toolbar élégante :
+
+Curseur
+Ligne horizontale
+Ligne de tendance
+Zone
+Support / Résistance
+Mesure
+
+Plus tard :
+
+Order Block
+FVG
+Fibonacci
+
+Pour le MVP, rendre au minimum fonctionnels :
+
+- ligne horizontale
+- support/résistance
+- ligne de tendance
+- mesure
+
+L'utilisateur doit pouvoir dessiner directement sur le graphique.
+
+==================================================
+5. PREMIÈRE ÉTAPE : ANALYSER
+==================================================
+
+Afficher en dessous du graphique :
+
+« Analyse le marché »
+
+Petite checklist :
+
+☐ Quelle est la tendance ?
+☐ Où sont les zones importantes ?
+☐ Quelle est la structure ?
+☐ Y a-t-il une cassure ?
+☐ Y a-t-il un retest ?
+
+Mais ne pas obliger l'utilisateur à remplir toutes les cases pour les premières missions.
+
+Créer progressivement cette complexité.
+
+==================================================
+6. DEUXIÈME ÉTAPE : DÉCISION
+==================================================
+
+Afficher une zone très claire :
+
+« Que ferais-tu ? »
+
+3 boutons modernes :
+
+🟢 ACHETER
+
+⚪ ATTENDRE
+
+🔴 VENDRE
+
+IMPORTANT :
+
+« Attendre » doit être une vraie décision valide.
+
+L'application ne doit jamais donner l'impression qu'il faut forcément trader.
+
+Quand l'utilisateur clique :
+
+ACHETER
+
+ou
+
+VENDRE
+
+passer à l'étape suivante.
+
+Si :
+
+ATTENDRE
+
+faire avancer le marché et permettre de voir si son analyse était cohérente.
+
+==================================================
+7. TROISIÈME ÉTAPE : PLACER L'ENTRÉE
+==================================================
+
+Après avoir choisi Acheter/Vendre :
+
+Afficher :
+
+« Place ton entrée »
+
+Sous-titre :
+
+« Où entrerais-tu selon ton analyse ? »
+
+L'utilisateur doit pouvoir déplacer une ligne directement sur le graphique.
+
+Créer une ligne d'entrée.
+
+Afficher dynamiquement le prix.
+
+Bouton :
+
+« Valider mon entrée »
+
+==================================================
+8. QUATRIÈME ÉTAPE : STOP LOSS
+==================================================
+
+Afficher :
+
+« Maintenant, protège ton trade. »
+
+Sous-titre :
+
+« Où ton analyse serait-elle invalidée ? »
+
+L'utilisateur place son Stop Loss directement sur le graphique.
+
+Afficher immédiatement :
+
+Risque :
+XX €
+
+Risque :
+X %
+
+Créer une zone visuelle entre entrée et Stop Loss.
+
+Si le Stop Loss est incohérent avec la structure, ne pas empêcher l'utilisateur de continuer.
+
+Afficher ensuite une explication pédagogique :
+
+« Ton stop est très proche de ton entrée. Vérifie s'il laisse suffisamment de place au mouvement du marché. »
+
+==================================================
+9. CINQUIÈME ÉTAPE : TAKE PROFIT
+==================================================
+
+Afficher :
+
+« Où prends-tu ton objectif ? »
+
+Sous-titre :
+
+« Choisis une zone où ton scénario pourrait se réaliser. »
+
+L'utilisateur place son Take Profit.
+
+Afficher automatiquement :
+
+Gain potentiel :
+XXX €
+
+Risk / Reward :
+1 : X
+
+Exemple :
+
+Risque :
+100 €
+
+Gain potentiel :
+250 €
+
+Ratio :
+1 : 2,5
+
+Créer une représentation visuelle claire :
+
+ENTRY
+────────
+
+RISQUE
+██████
+
+STOP LOSS
+
+et
+
+ENTRY
+────────
+
+GAIN POTENTIEL
+████████████
+
+TAKE PROFIT
+
+==================================================
+10. RÉCAPITULATIF AVANT EXÉCUTION
+==================================================
+
+Afficher une carte :
+
+« Ton plan »
+
+Marché :
+EUR/USD
+
+Direction :
+BUY
+
+Entrée :
+1.0842
+
+Stop :
+1.0818
+
+Objectif :
+1.0902
+
+Risque :
+100 €
+
+Gain potentiel :
+250 €
+
+Ratio :
+1 : 2,5
+
+Puis :
+
+« Prêt à voir ce que le marché fait ? »
+
+Bouton principal :
+
+▶ LANCER LA SIMULATION
+
+==================================================
+11. LE MARCHÉ DOIT ENSUITE AVANCER
+==================================================
+
+C'est extrêmement important.
+
+L'utilisateur ne doit PAS voir les bougies futures.
+
+Le graphique doit révéler les bougies progressivement.
+
+Créer une barre de contrôle :
+
+⏸ Pause
+
+▶ Continuer
+
+⏩ Avancer
+
+Ajouter éventuellement :
+
+1 bougie
+5 bougies
+10 bougies
+
+Pour les premières missions, utiliser 1 bougie à la fois.
+
+L'utilisateur doit réellement ressentir :
+
+« Voyons si mon scénario se réalise. »
+
+==================================================
+12. EXÉCUTION DU TRADE
+==================================================
+
+Si le prix atteint le Stop Loss :
+
+Afficher une animation propre :
+
+STOP LOSS TOUCHÉ
+
+Puis :
+
+« Ton scénario a été invalidé. »
+
+Afficher le résultat :
+
+- P&L
+- risque
+- mouvement du marché
+
+Si le Take Profit est atteint :
+
+TAKE PROFIT ATTEINT
+
+Puis :
+
+« Ton scénario s'est réalisé. »
+
+IMPORTANT :
+
+Ne pas afficher uniquement « gagné » ou « perdu ».
+
+L'objectif est pédagogique.
+
+==================================================
+13. ÉCRAN D'ANALYSE APRÈS LE TRADE
+==================================================
+
+Créer un écran extrêmement important.
+
+Titre :
+
+« Voyons ce qui s'est passé. »
+
+Puis analyse visuelle du graphique.
+
+Afficher :
+
+✓ Bonne lecture de la tendance
+
+✓ Entrée cohérente avec ton scénario
+
+⚠ Stop trop proche de la structure
+
+ou :
+
+✓ Bonne zone
+
+✕ Tu as ignoré une résistance
+
+✕ Ton entrée était trop anticipée
+
+Puis :
+
+« Ce qu'il faut retenir »
+
+Une explication très courte et très claire.
+
+Exemple :
+
+« Une cassure seule ne suffit pas toujours. Attendre une confirmation ou un retest peut faire partie d'un plan plus structuré. »
+
+IMPORTANT :
+Ne jamais présenter cela comme une règle absolue garantissant un résultat.
+
+==================================================
+14. SCORE DE LA MISSION
+==================================================
+
+Créer un système de score pédagogique.
+
+Exemple :
+
+ANALYSE
+8/10
+
+ENTRÉE
+9/10
+
+RISK MANAGEMENT
+10/10
+
+DISCIPLINE
+9/10
+
+Score final :
+
+9.1 / 10
+
+XP :
+
++120 XP
+
+Puis :
+
+« Tu progresses. »
+
+Bouton :
+
+« Mission suivante »
+
+==================================================
+15. SYSTÈME DE PROGRESSION
+==================================================
+
+Chaque mission doit enseigner une compétence.
+
+Exemple :
+
+MISSION 01
+Identifier une tendance
+
+MISSION 02
+Lire les chandeliers
+
+MISSION 03
+Trouver un support
+
+MISSION 04
+Trouver une résistance
+
+MISSION 05
+Identifier une cassure
+
+MISSION 06
+Identifier un retest
+
+MISSION 07
+Placer un Stop Loss
+
+MISSION 08
+Calculer le Risk/Reward
+
+MISSION 09
+Lire la structure
+
+MISSION 10
+Construire un premier plan
+
+Puis niveaux plus avancés :
+
+PRICE ACTION
+
+LIQUIDITÉ
+
+FIGURES CHARTISTES
+
+INDICATEURS
+
+ORDER BLOCKS
+
+FVG
+
+RISK MANAGEMENT
+
+STRATÉGIES
+
+BACKTESTING
+
+==================================================
+16. DIFFICULTÉ PROGRESSIVE
+==================================================
+
+NE PAS montrer immédiatement toutes les fonctionnalités.
+
+Débutant :
+
+- tendance
+- bougies
+- support
+- résistance
+
+Intermédiaire :
+
+- structure
+- cassure
+- retest
+- patterns
+- indicateurs
+
+Avancé :
+
+- liquidité
+- FVG
+- Order Blocks
+- BOS
+- CHoCH
+- stratégies
+
+Expert :
+
+- stratégie complète
+- backtesting
+- optimisation
+- analyse statistique
+
+==================================================
+17. DIFFÉRENTS MARCHÉS
+==================================================
+
+Permettre progressivement :
+
+Crypto
+
+BTC/USDT
+ETH/USDT
+
+Forex
+
+EUR/USD
+GBP/USD
+USD/JPY
+
+Indices
+
+SPX
+NASDAQ
+
+Actions
+
+Quelques actifs populaires
+
+Matières premières
+
+Or
+Pétrole
+
+Pour le MVP, utiliser des données historiques cohérentes et reproductibles.
+
+==================================================
+18. CAPITAL VIRTUEL
+==================================================
+
+Capital par défaut :
+
+10 000 €
+
+Créer une barre en haut :
+
+Capital
+10 000 €
+
+P&L
+0 €
+
+Risque disponible
+
+Mais IMPORTANT :
+
+Le capital est entièrement virtuel.
+
+Ajouter une petite mention :
+
+« Simulation uniquement — aucun argent réel n'est utilisé. »
+
+==================================================
+19. UX MOBILE
+==================================================
+
+L'application doit être mobile-first.
+
+Pendant l'analyse :
+
+Graphique :
+~65 %
+
+Contrôles :
+~35 %
+
+Les boutons doivent être très faciles à utiliser avec le pouce.
+
+Les outils du graphique doivent être accessibles sans cacher le graphique.
+
+Ne jamais faire une interface minuscule ressemblant à une plateforme desktop compressée.
+
+==================================================
+20. DESIGN
+==================================================
+
+Refondre complètement le design actuel.
+
+Je veux :
+
+PREMIUM
+DARK
+FINTECH
+MODERNE
+ÉNERGIQUE
+ÉDUCATIF
+
+Éviter :
+
+- trop de couleurs
+- effets néon excessifs
+- gros blocs inutiles
+- interface enfantine
+- emojis partout
+- boutons énormes sans hiérarchie
+
+Utiliser une palette cohérente :
+
+Fond sombre premium.
+
+Vert :
+validation / scénario positif.
+
+Rouge :
+invalidation / perte.
+
+Bleu ou violet :
+information / apprentissage.
+
+Blanc :
+contenu principal.
+
+Le graphique doit être visuellement le centre de l'expérience.
+
+==================================================
+21. MICROCOPY
+==================================================
+
+Utiliser un ton humain et motivant.
+
+Exemples :
+
+« À toi de jouer. »
+
+« Regarde bien le contexte. »
+
+« Ne te précipite pas. »
+
+« Où entrerais-tu ? »
+
+« Et maintenant : où acceptes-tu d'avoir tort ? »
+
+« Ton plan est prêt. »
+
+« Voyons ce que le marché fait. »
+
+« Bien vu. »
+
+« Pas grave. Comprends pourquoi. »
+
+« Là, tu commences à vraiment lire le marché. »
+
+« Encore une mission. »
+
+« Niveau supérieur débloqué. »
+
+Mais rester crédible.
+
+Pas de :
+
+« Tu vas gagner de l'argent. »
+
+« Setup garanti. »
+
+« Signal sûr. »
+
+« Cette stratégie fonctionne à coup sûr. »
+
+==================================================
+22. PREMIÈRES MISSIONS À CRÉER
+==================================================
+
+Créer au minimum 10 missions fonctionnelles avec des scénarios historiques prédéfinis.
+
+MISSION 01 :
+« Bullish ou bearish ? »
+
+Objectif :
+identifier la direction des bougies.
+
+MISSION 02 :
+« Trouve la tendance »
+
+Objectif :
+uptrend / downtrend / range.
+
+MISSION 03 :
+« Trouve le support »
+
+Objectif :
+placer une zone.
+
+MISSION 04 :
+« Trouve la résistance »
+
+Objectif :
+placer une zone.
+
+MISSION 05 :
+« Cassure ou faux breakout ? »
+
+Objectif :
+observer le contexte.
+
+MISSION 06 :
+« Attends le retest »
+
+Objectif :
+comprendre cassure + retest.
+
+MISSION 07 :
+« Où placer ton stop ? »
+
+Objectif :
+risk management.
+
+MISSION 08 :
+« Trouve ton objectif »
+
+Objectif :
+Risk/Reward.
+
+MISSION 09 :
+« Construis ton plan »
+
+Objectif :
+entrée + SL + TP.
+
+MISSION 10 :
+« Prends la décision »
+
+Objectif :
+analyse complète.
+
+==================================================
+23. IMPORTANT : NE PAS TRICHER AVEC LE GRAPHIQUE
+==================================================
+
+Le moteur doit conserver les données futures cachées.
+
+L'utilisateur ne doit jamais voir les bougies futures.
+
+Lorsqu'il appuie sur :
+
+« Avancer »
+
+seules les prochaines bougies deviennent visibles.
+
+Cela doit être reproductible.
+
+Une même mission doit toujours utiliser le même scénario historique pour permettre de comparer les performances.
+
+==================================================
+24. ARCHITECTURE DES DONNÉES
+==================================================
+
+Créer une structure de données pour les missions.
+
+Chaque mission doit contenir :
+
+id
+
+title
+
+difficulty
+
+market
+
+symbol
+
+timeframe
+
+historicalData
+
+learningObjective
+
+instructions
+
+correctAnalysis
+
+entryRange
+
+stopLogic
+
+targetLogic
+
+explanation
+
+xpReward
+
+mistakes
+
+La logique doit être suffisamment propre pour ajouter facilement 100+ missions plus tard.
+
+==================================================
+25. IMPORTANT : NE PAS SUPPRIMER LE RESTE DE L'APPLICATION
+==================================================
+
+Cette demande concerne la section SIMULATEUR.
+
+Ne casse pas :
+
+- Académie
+- Lab
+- Profil
+- Coach IA
+- Journal
+- abonnement
+- onboarding
+
+La navigation actuelle doit rester fonctionnelle.
+
+Remplace uniquement la partie Simulateur par cette nouvelle expérience.
+
+==================================================
+26. CRITÈRE FINAL
+==================================================
+
+Quand je lance le simulateur, je dois immédiatement comprendre :
+
+« Je dois analyser ce graphique, prendre une décision, placer mon entrée, définir mon risque, puis regarder ce que le marché fait. »
+
+Si l'utilisateur doit réfléchir à :
+« Mais qu'est-ce que je suis censé faire ici ? »
+
+alors l'UX est ratée.
+
+Le simulateur doit être :
+
+CLAIR
+→ IMMERSIF
+→ INTERACTIF
+→ PÉDAGOGIQUE
+→ ADDICTIF
+→ PREMIUM
+
+Je veux une expérience qui donne envie de refaire :
+
+« Encore une mission. »
+
+Pas simplement un écran avec un graphique et trois boutons.
+
+Commence par refondre complètement l'interface et le flow du simulateur, puis implémente la logique fonctionnelle des 10 premières missions.
