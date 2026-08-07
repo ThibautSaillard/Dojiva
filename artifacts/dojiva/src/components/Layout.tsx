@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { useGetProgress } from "@workspace/api-client-react";
 import { Flame, User, BookOpen, Activity, FlaskConical, Trophy } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { PublicFooter } from "@/pages/legal";
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const { data: progress, isLoading } = useGetProgress();
@@ -14,7 +15,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
     location === "/inscription" ||
     location.startsWith("/sign-in") ||
     location.startsWith("/sign-up") ||
-    location.startsWith("/paiement");
+    location.startsWith("/paiement") ||
+    location.startsWith("/legal");
 
   useEffect(() => {
     if (progress && !progress.onboarded && !isPublicPage) {
@@ -36,6 +38,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <main className="flex-1 w-full mx-auto max-w-5xl">
           {children}
         </main>
+          <PublicFooter />
       </div>
     );
   }

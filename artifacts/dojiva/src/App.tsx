@@ -13,6 +13,7 @@ import Journal from '@/pages/journal';
 import Profile from '@/pages/profile';
 import Payment, { PaymentCheckout } from '@/pages/payment';
 import { SignInPage, SignUpPage } from '@/pages/auth';
+import LegalHub, { LegalDocument } from '@/pages/legal';
 import { Redirect, Route, Switch, Router as WouterRouter } from 'wouter';
 import { Layout } from '@/components/Layout';
 import { ClerkProvider } from '@clerk/react';
@@ -48,6 +49,8 @@ function Router() {
         <Route path="/apprendre" component={Onboarding} />
         <Route path="/paiement" component={Payment} />
         <Route path="/paiement/checkout" component={PaymentCheckout} />
+        <Route path="/legal" component={LegalHub} />
+        <Route path="/legal/:slug" component={LegalDocument} />
         <Route path="/academie" component={Academy} />
         <Route path="/lecon/:id" component={Lesson} />
         <Route path="/simulateur" component={Simulator} />
