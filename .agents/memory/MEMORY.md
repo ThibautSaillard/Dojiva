@@ -1,1 +1,2 @@
 - [Orval zod codegen needs zod/v4 import](orval-zod-v4.md) — Orval v8 emits `zod.int()`; the codegen script's sed rewrite to `zod/v4` must stay or typecheck:libs breaks after codegen.
+- [GitHub push fallback](github-push-fallback.md) — gitPush says NO_CREDENTIALS here; push via the GitHub connector's oauth access_token instead (repo ThibautSaillard/Dojiva).
