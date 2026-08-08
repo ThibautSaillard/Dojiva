@@ -2,3 +2,4 @@
 - [GitHub push fallback](github-push-fallback.md) — gitPush says NO_CREDENTIALS here; push via the GitHub connector's oauth access_token instead (repo ThibautSaillard/Dojiva).
 - [Manual vite builds](artifact-manual-builds.md) — artifact builds run from the shell need PORT and BASE_PATH set; workflows inject them, manual commands don't.
 - [Design subagent contract drift](design-subagent-contracts.md) — after a design pass, re-run typecheck and diff data-testids; framer-motion ease arrays need tuple casts.
+- [Supabase Auth quirks](supabase-auth-quirks.md) — SUPABASE_URL secret carries /rest/v1/ (normalize to origin); disabled OAuth provider = raw JSON page unless pre-checked via /auth/v1/settings.
