@@ -1,7 +1,7 @@
 import { ArrowLeft, ArrowRight, CheckCircle2, FileText, LockKeyhole, ShieldCheck } from "lucide-react";
 import { Link, useRoute } from "wouter";
 
-const lastUpdated = "7 août 2026";
+const lastUpdated = "8 août 2026";
 
 const legalDocuments = [
   {
@@ -94,34 +94,34 @@ const documentsBySlug = {
   },
   remboursement: {
     title: "Politique de remboursement",
-    intro: "Lis cette page avant de souscrire : elle explique précisément quand un remboursement est possible ou non.",
-    highlight: "Important : si tu commences la première leçon de la deuxième partie du parcours, le remboursement n’est plus possible pour cette commande, sous réserve des droits impératifs prévus par la loi.",
+    intro: "Lis cette page avant de souscrire : elle explique comment fonctionnent le satisfait ou remboursé et la résiliation.",
+    highlight: "Satisfait ou remboursé : si Dojiva ne te convient pas, tu es remboursé immédiatement, sur simple demande et sans justification.",
     sections: [
       {
         title: "1. Règle principale",
         paragraphs: [
-          "Dojiva vend un accès à du contenu numérique pédagogique disponible en ligne. Tu peux demander un remboursement tant que tu n’as pas commencé la première leçon de la deuxième partie du parcours.",
-          "Le fait de cliquer sur cette première leçon, de l’ouvrir ou d’en commencer la lecture vaut commencement d’utilisation du contenu concerné. À partir de ce moment, la commande n’est plus éligible au remboursement au titre de cette politique.",
+          "Tous les abonnements Dojiva sont satisfait ou remboursé. Tu peux demander le remboursement de ta commande sur simple demande, sans avoir à te justifier.",
+          "Le remboursement est déclenché immédiatement après réception de la demande. Le délai d’apparition sur ton compte dépend ensuite du moyen de paiement utilisé.",
         ],
       },
       {
-        title: "2. Pourquoi cette limite existe",
+        title: "2. Sans engagement",
         paragraphs: [
-          "Cette règle permet de protéger le contenu numérique dès qu’il a été rendu accessible et commencé. Elle ne remet pas en cause les garanties légales qui ne peuvent pas être exclues.",
-          "Lorsque la loi exige un consentement exprès à l’exécution immédiate et une reconnaissance de la perte du droit de rétractation, ces éléments doivent être présentés et recueillis au checkout avant l’accès au contenu.",
+          "L’abonnement est sans engagement : tu peux le résilier à tout moment depuis tes paramètres.",
+          "La résiliation arrête le renouvellement. Ton accès reste disponible jusqu’à la fin de la période déjà payée.",
         ],
       },
       {
         title: "3. Demander un remboursement",
         paragraphs: [
-          "Envoie ta demande depuis l’adresse e-mail associée à ton compte, en indiquant ton nom, la formule concernée, la date d’achat et la raison de ta demande. Le contact de remboursement doit être renseigné dans les mentions légales avant l’ouverture commerciale du service.",
-          "Nous pouvons vérifier l’état de ta progression afin de déterminer si la première leçon de la deuxième partie a été commencée. Une demande éligible est traitée dans un délai raisonnable, selon le moyen de paiement utilisé.",
+          "Envoie ta demande depuis l’adresse e-mail associée à ton compte, en indiquant ton nom, la formule concernée et la date d’achat. Le contact de remboursement doit être renseigné dans les mentions légales avant l’ouverture commerciale du service.",
+          "Aucune justification n’est demandée. La demande déclenche immédiatement le remboursement de la commande concernée.",
         ],
       },
       {
         title: "4. Annulation d’un abonnement",
         paragraphs: [
-          "L’annulation d’un abonnement empêche son renouvellement. Elle ne transforme pas automatiquement les périodes déjà commencées en remboursement.",
+          "L’annulation d’un abonnement empêche son renouvellement et peut se faire à tout moment depuis tes paramètres.",
           "Si un prélèvement est contesté, contacte-nous d’abord afin que nous puissions vérifier la commande et la situation de ton compte.",
         ],
       },
@@ -305,7 +305,7 @@ export default function LegalHub() {
         <div className="mt-10 rounded-2xl border border-primary/20 bg-primary/5 p-5 text-sm leading-6 text-muted-foreground">
           <p className="font-semibold text-foreground">À retenir pour le remboursement</p>
           <p className="mt-2">
-            Commencer la première leçon de la deuxième partie signifie que le contenu numérique a été commencé. Dans ce cas, la commande n’est plus remboursable selon la politique Dojiva, sous réserve des droits légaux obligatoires.
+            Tous les abonnements sont satisfait ou remboursé immédiatement, sur simple demande et sans justification. Ils sont aussi sans engagement : tu peux résilier à tout moment depuis tes paramètres.
           </p>
         </div>
       </div>
@@ -366,26 +366,8 @@ export function LegalDocument() {
 }
 
 function LegalShell({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="min-h-[calc(100dvh-4rem)] bg-background text-foreground">
-      <div className="border-b border-border bg-background/80 px-5 py-5 backdrop-blur-xl sm:px-8">
-        <div className="mx-auto flex max-w-4xl items-center justify-between gap-4">
-          <Link href="/" className="flex items-center gap-2 text-xl font-black tracking-tight">
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-white">
-              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-              </svg>
-            </span>
-            Dojiva
-          </Link>
-          <Link href="/sign-up" className="rounded-lg bg-primary px-4 py-2 text-sm font-bold text-primary-foreground transition hover:bg-primary/90">
-            Créer mon compte
-          </Link>
-        </div>
-      </div>
-      {children}
-    </div>
-  );
+  // Le header global (Layout) est déjà affiché au-dessus : pas de barre locale ici.
+  return <div className="min-h-[calc(100dvh-4rem)] bg-background text-foreground">{children}</div>;
 }
 
 function LegalEyebrow() {

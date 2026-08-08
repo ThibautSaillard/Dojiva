@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useLocation } from "wouter";
+import { Link, Redirect, useLocation } from "wouter";
 import { ArrowLeft, ArrowRight, Check, LockKeyhole, Plus, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -221,8 +221,8 @@ export default function Payment() {
                   </li>
                 ))}
                 {plan.excluded.map((feature) => (
-                  <li key={feature} className="flex items-start gap-2.5 text-muted-foreground/60">
-                    <X className="mt-0.5 h-4 w-4 shrink-0" />
+                  <li key={feature} className="flex items-start gap-2.5 text-muted-foreground">
+                    <X className="mt-0.5 h-4 w-4 shrink-0 opacity-70" />
                     <span className="line-through">{feature}</span>
                   </li>
                 ))}
@@ -334,10 +334,15 @@ export default function Payment() {
 
 export function PaymentCheckout() {
   const params = new URLSearchParams(window.location.search);
-  const planId = params.get("plan") || "pro";
+  const planId = params.get("plan");
   const period: Period = params.get("period") === "yearly" ? "yearly" : "monthly";
-  const plan = plans.find((candidate) => candidate.id === planId) ?? plans[1];
+  const plan = plans.find((candidate) => candidate.id === planId);
   const yearly = period === "yearly";
+
+  // Lien manipulé ou périmé : retour au choix des formules plutôt qu'un plan par défaut silencieux.
+  if (!plan) {
+    return <Redirect to="/paiement" />;
+  }
 
   return (
     <div className="min-h-[calc(100dvh-4rem)] bg-background px-4 py-8 sm:px-6">
