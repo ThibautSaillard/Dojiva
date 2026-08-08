@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "wouter";
 import { ArrowRight, ChevronDown, ChevronLeft, ChevronRight, Star, TrendingUp, ShieldCheck, Zap } from "lucide-react";
 import { PhoneShowcase } from "../components/PhoneShowcase";
+import { WhyDojiva } from "../components/WhyDojiva";
 import { motion, useReducedMotion } from "framer-motion";
 import avatarYanis from "@assets/IMG_9202_1786143915237.jpeg";
 import avatarLucas from "@assets/IMG_9204_1786143915237.jpeg";
@@ -81,6 +82,14 @@ export default function Home() {
   const [activeFaq, setActiveFaq] = useState<number | null>(0);
   const testimonial = testimonials[activeTestimonial];
 
+  // En SPA, le navigateur tente le saut d'ancre avant que le contenu existe : on le rejoue après le rendu.
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (!hash) return;
+    const target = document.querySelector(hash);
+    if (target) target.scrollIntoView();
+  }, []);
+
   return (
     <div className="min-h-[100dvh] flex flex-col bg-background text-foreground relative overflow-x-clip">
       {/* Background glow effects — clipped in their own layer so position:sticky keeps working */}
@@ -134,6 +143,8 @@ export default function Home() {
         />
 
         <StackedFeatures />
+
+        <WhyDojiva />
 
         <FAQSection
           activeFaq={activeFaq}
