@@ -65,11 +65,11 @@ const faqs = [
   },
   {
     question: "Puis-je annuler mon abonnement ?",
-    answer: "Oui. Tu peux annuler le renouvellement de ton abonnement. L’accès reste disponible jusqu’à la fin de la période déjà payée, sauf disposition différente prévue par la loi.",
+    answer: "Oui. L’abonnement est sans engagement : tu peux le résilier à tout moment depuis tes paramètres. L’accès reste disponible jusqu’à la fin de la période déjà payée.",
   },
   {
-    question: "Puis-je être remboursé après avoir commencé le parcours ?",
-    answer: "Tu peux demander un remboursement tant que tu n’as pas commencé la première leçon de la deuxième partie. Dès que tu ouvres ou commences cette leçon, la commande n’est plus éligible au remboursement selon notre politique, sous réserve de tes droits légaux.",
+    question: "Puis-je être remboursé si Dojiva ne me convient pas ?",
+    answer: "Oui. Tous les abonnements sont satisfait ou remboursé : si Dojiva ne te convient pas, tu es remboursé immédiatement, sur simple demande.",
   },
   {
     question: "Dojiva garantit-il des résultats en trading ?",
