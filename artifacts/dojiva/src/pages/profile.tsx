@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
 import { useGetProgress, useListBadges } from "@workspace/api-client-react";
-import { User, Flame, Zap, Trophy, LogOut, LogIn, Loader2 } from "lucide-react";
+import { User, Flame, Zap, Trophy, LogOut, LogIn, Loader2, CreditCard, XCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/auth-context";
 
@@ -11,6 +11,8 @@ export default function Profile() {
   const { user, signOut } = useAuth();
   const [, setLocation] = useLocation();
   const [signingOut, setSigningOut] = useState(false);
+  const [cancellationRequested, setCancellationRequested] = useState(false);
+  const [showCancellationConfirmation, setShowCancellationConfirmation] = useState(false);
 
   async function handleLogout() {
     if (signingOut) return;
@@ -48,6 +50,86 @@ export default function Profile() {
           {progress.premium ? "Membre Premium" : "Plan Gratuit"}
         </div>
       </div>
+
+      {/* Abonnement */}
+      {progress.premium && (
+        <div>
+          <h2 className="text-xl font-bold mb-4">Abonnement</h2>
+          <div className="p-5 rounded-2xl bg-card border border-border flex flex-col gap-4">
+            <div className="flex items-start gap-3">
+              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+                <CreditCard className="w-5 h-5 text-primary" />
+              </div>
+              <div>
+                <div className="font-semibold">Membre Premium</div>
+                <p className="mt-1 text-sm leading-5 text-muted-foreground">
+                  Ton accès premium est actif. L’abonnement est sans engagement.
+                </p>
+              </div>
+            </div>
+
+            {cancellationRequested && (
+              <div
+                role="status"
+                data-testid="text-cancellation-notice"
+                className="rounded-xl border border-primary/20 bg-primary/5 px-4 py-3 text-sm leading-5 text-muted-foreground"
+              >
+                La résiliation sera activée dès que le paiement réel sera branché. Aucun abonnement n’a été modifié.
+              </div>
+            )}
+
+            <button
+              type="button"
+              data-testid="button-cancel-subscription"
+              onClick={() => setShowCancellationConfirmation(true)}
+              className="flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border border-destructive/30 px-4 py-3 text-sm font-bold text-destructive transition-colors hover:bg-destructive/10"
+            >
+              <XCircle className="h-4 w-4" />
+              Annuler mon abonnement
+            </button>
+
+            {showCancellationConfirmation && (
+              <div
+                role="alertdialog"
+                aria-modal="true"
+                aria-labelledby="cancel-subscription-title"
+                aria-describedby="cancel-subscription-description"
+                className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
+              >
+                <div className="w-full max-w-md rounded-2xl border border-border bg-card p-6 shadow-2xl">
+                  <h3 id="cancel-subscription-title" className="text-lg font-semibold">
+                    Annuler ton abonnement ?
+                  </h3>
+                  <p id="cancel-subscription-description" className="mt-2 text-sm leading-6 text-muted-foreground">
+                    L’abonnement est sans engagement et peut être résilié à tout moment. Le paiement réel n’est pas encore connecté : cette action ne modifiera donc pas ton accès aujourd’hui.
+                  </p>
+                  <div className="mt-6 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+                    <button
+                      type="button"
+                      data-testid="button-cancel-cancellation"
+                      onClick={() => setShowCancellationConfirmation(false)}
+                      className="min-h-11 rounded-xl border border-border px-4 py-3 text-sm font-bold hover:bg-secondary"
+                    >
+                      Retour
+                    </button>
+                    <button
+                      type="button"
+                      data-testid="button-confirm-cancel-subscription"
+                      onClick={() => {
+                        setShowCancellationConfirmation(false);
+                        setCancellationRequested(true);
+                      }}
+                      className="min-h-11 rounded-xl bg-destructive px-4 py-3 text-sm font-bold text-destructive-foreground hover:bg-destructive/90"
+                    >
+                      Confirmer
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Stats row */}
       <div className="grid grid-cols-2 gap-4">
