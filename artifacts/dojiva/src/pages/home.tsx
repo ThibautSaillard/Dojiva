@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "wouter";
 import { ArrowRight, ChevronDown, ChevronLeft, ChevronRight, Star, TrendingUp, ShieldCheck, Zap } from "lucide-react";
-import { PhoneShowcase } from "../components/PhoneShowcase";
+import { HeroTradingDemo } from "../components/HeroTradingDemo";
 import { WhyDojiva } from "../components/WhyDojiva";
 import { motion, useReducedMotion } from "framer-motion";
 import avatarYanis from "@assets/IMG_9202_1786143915237.jpeg";
@@ -97,28 +97,28 @@ export default function Home() {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-primary/20 blur-[120px] rounded-full" />
       </div>
       
-      <main className="flex-1 flex flex-col items-center justify-center px-4 py-10 md:py-20 text-center relative z-10">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs md:text-sm font-semibold mb-4 md:mb-8 border border-primary/20">
+      <main className="flex-1 flex flex-col items-center justify-center px-4 py-8 md:py-12 text-center relative z-10">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs md:text-sm font-semibold mb-4 md:mb-5 border border-primary/20">
           <Zap className="w-3.5 h-3.5 md:w-4 md:h-4" /> La nouvelle école du trading
         </div>
         
-        <h1 className="text-[2.1rem] leading-[1.1] md:text-7xl font-bold tracking-tighter mb-3 md:mb-6 max-w-4xl md:leading-tight">
+        <h1 className="text-[2.1rem] leading-[1.1] md:text-6xl font-bold tracking-tighter mb-3 md:mb-4 max-w-4xl md:leading-tight">
           Apprends le trading <br/>
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-400">
             sans te prendre la tête.
           </span>
         </h1>
         
-        <p className="text-sm leading-relaxed md:text-xl text-muted-foreground mb-5 md:mb-10 max-w-2xl">
-          Tu pars de zéro ? Parfait. On va te faire passer de "c'est quoi cette bougie ?" à "je sais exactement ce que je regarde". Des petites leçons. Des vrais graphiques. Et surtout : tu pratiques.
+        <p className="text-sm leading-relaxed md:text-lg text-muted-foreground mb-5 md:mb-6 max-w-2xl">
+          De "c'est quoi cette bougie ?" à "je sais exactement ce que je regarde." Des leçons courtes, de vrais graphiques, zéro blabla.
         </p>
 
-        <Link href="/sign-up" className="group flex items-center gap-2 bg-primary text-primary-foreground px-7 py-3.5 md:px-8 md:py-4 rounded-xl text-base md:text-lg font-bold hover:bg-primary/90 transition-all shadow-xl shadow-primary/25 hover:scale-105">
+        <Link href="/sign-up" className="group flex items-center gap-2 bg-primary text-primary-foreground px-7 py-3.5 md:px-8 md:py-4 rounded-xl text-base md:text-lg font-bold hover:bg-primary/90 transition-all shadow-xl shadow-primary/25 hover:scale-105 mb-8 md:mb-10">
           Créer mon compte
           <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
         </Link>
 
-        <PhoneShowcase />
+        <HeroTradingDemo />
 
         <TestimonialsSection
           testimonial={testimonial}
