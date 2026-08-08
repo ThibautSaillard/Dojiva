@@ -7,6 +7,8 @@ import Onboarding from '@/pages/onboarding';
 import Academy from '@/pages/academy';
 import Lesson from '@/pages/lesson';
 import Simulator from '@/pages/simulator';
+import SimulatorMission from '@/pages/simulator-mission';
+import SimulatorLibre from '@/pages/simulator-libre';
 import Laboratory from '@/pages/laboratory';
 import Coach from '@/pages/coach';
 import Journal from '@/pages/journal';
@@ -54,6 +56,10 @@ function Router() {
         <Route path="/academie" component={Academy} />
         <Route path="/lecon/:id" component={Lesson} />
         <Route path="/simulateur" component={Simulator} />
+        <Route path="/simulateur/libre" component={SimulatorLibre} />
+        <Route path="/simulateur/mission/:id">
+          {(params) => <SimulatorMission id={params.id ?? ''} />}
+        </Route>
         <Route path="/laboratoire" component={Laboratory} />
         <Route path="/coach" component={Coach} />
         <Route path="/journal" component={Journal} />

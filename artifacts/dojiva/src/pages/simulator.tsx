@@ -1,288 +1,296 @@
-import { useState } from "react";
-import { useCreateScenario, useSubmitTrade, getGetProgressQueryKey, getGetJournalQueryKey, getListBadgesQueryKey } from "@workspace/api-client-react";
-import { useQueryClient } from "@tanstack/react-query";
-import { PremiumGate } from "@/components/PremiumGate";
+import { useMemo } from "react";
+import { Link } from "wouter";
 import { useGetProgress } from "@workspace/api-client-react";
-import { ArrowUpCircle, ArrowDownCircle, Clock, Play, Pause, FastForward, RotateCcw } from "lucide-react";
+import { PremiumGate } from "@/components/PremiumGate";
+import {
+  DIFFICULTY_LABELS,
+  MISSIONS,
+} from "@/features/simulator/missions";
+import { CAPITAL } from "@/features/simulator/engine";
+import {
+  completedCount,
+  loadSimProgress,
+  nextMissionId,
+} from "@/features/simulator/storage";
+import {
+  Activity,
+  History,
+  Lock,
+  ScanLine,
+  Target,
+  Trophy,
+  ChevronRight,
+  Check,
+  Play
+} from "lucide-react";
 import { cn } from "@/lib/utils";
-
-// Mock CandleChart until we build the real SVG one completely
-function SimpleCandleChart({ candles, future, step }: { candles: any[], future: any[], step: number }) {
-  const visible = [...candles, ...future.slice(0, step)];
-  if (!visible.length) return null;
-  
-  const min = Math.min(...visible.map(c => c.l));
-  const max = Math.max(...visible.map(c => c.h));
-  const range = max - min || 1;
-  const h = 200;
-  
-  return (
-    <div className="w-full h-[240px] bg-card border border-border rounded-xl p-4 flex items-end gap-1 overflow-hidden relative">
-      {visible.map((c, i) => {
-        const isGreen = c.c >= c.o;
-        const color = isGreen ? "bg-success" : "bg-destructive";
-        const hPct = ((Math.max(c.o, c.c) - Math.min(c.o, c.c)) / range) * 100;
-        const wickHPct = ((c.h - c.l) / range) * 100;
-        const topSpace = ((max - c.h) / range) * 100;
-        
-        return (
-          <div key={i} className="relative flex-1 flex flex-col items-center h-full" style={{ paddingTop: `${topSpace}%` }}>
-             <div className="w-[1px] bg-muted-foreground/30 absolute" style={{ height: `${wickHPct}%` }} />
-             <div className={cn("w-full max-w-[8px] rounded-[1px] absolute z-10", color)} style={{ height: `${Math.max(hPct, 1)}%`, top: `${((max - Math.max(c.o, c.c)) / range) * 100}%` }} />
-          </div>
-        );
-      })}
-    </div>
-  );
-}
+import { motion } from "framer-motion";
 
 export default function Simulator() {
   const { data: progress } = useGetProgress();
-  const [decision, setDecision] = useState<"buy" | "sell" | "wait" | null>(null);
-  const [pendingDir, setPendingDir] = useState<"buy" | "sell" | null>(null);
-  const [stopLoss, setStopLoss] = useState("");
-  const [takeProfit, setTakeProfit] = useState("");
-  const [riskPercent, setRiskPercent] = useState(1);
-  const [replayStep, setReplayStep] = useState(0);
-  
-  const queryClient = useQueryClient();
-  const createScenario = useCreateScenario();
-  const submitTrade = useSubmitTrade({
-    mutation: {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: getGetProgressQueryKey() });
-        queryClient.invalidateQueries({ queryKey: getGetJournalQueryKey() });
-        queryClient.invalidateQueries({ queryKey: getListBadgesQueryKey() });
-      },
-    },
-  });
-  
-  const scenario = createScenario.data;
-  const result = submitTrade.data;
+  const simProgress = useMemo(() => loadSimProgress(), []);
 
   if (progress && !progress.premium) {
     return <PremiumGate />;
   }
 
-  if (!scenario && !createScenario.isPending) {
-    return (
-      <div className="flex flex-col items-center justify-center text-center py-20">
-        <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-6">
-          <ActivityIcon className="w-8 h-8 text-primary" />
-        </div>
-        <h1 className="text-3xl font-bold mb-4">Simulateur</h1>
-        <p className="text-muted-foreground max-w-md mx-auto mb-8">
-          Entraîne-toi avec tes 10 000€ virtuels. Analyse le marché, prends tes positions, et regarde l'évolution.
-        </p>
-        <button 
-          onClick={() => createScenario.mutate()}
-          className="bg-primary text-primary-foreground px-6 py-3 rounded-xl font-bold hover:bg-primary/90 transition-colors"
-        >
-          Lancer une session
-        </button>
-      </div>
-    );
-  }
-
-  const lastClose = scenario?.candles?.length
-    ? scenario.candles[scenario.candles.length - 1]!.c
-    : 0;
-
-  const openTicket = (dir: "buy" | "sell") => {
-    if (!lastClose) return;
-    setPendingDir(dir);
-    // Pré-remplissage pédagogique : SL à ~1% de l'entrée, TP pour un R:R de 2
-    const sl = dir === "buy" ? lastClose * 0.99 : lastClose * 1.01;
-    const tp = dir === "buy" ? lastClose * 1.02 : lastClose * 0.98;
-    setStopLoss(sl.toPrecision(6));
-    setTakeProfit(tp.toPrecision(6));
-  };
-
-  const slNum = parseFloat(stopLoss);
-  const tpNum = parseFloat(takeProfit);
-  const ticketValid =
-    pendingDir &&
-    Number.isFinite(slNum) &&
-    Number.isFinite(tpNum) &&
-    (pendingDir === "buy"
-      ? slNum < lastClose && tpNum > lastClose
-      : slNum > lastClose && tpNum < lastClose);
-
-  const confirmTrade = () => {
-    if (!scenario || !pendingDir || !ticketValid) return;
-    setDecision(pendingDir);
-    submitTrade.mutate({
-      data: {
-        scenarioId: scenario.id,
-        direction: pendingDir,
-        entry: lastClose,
-        stopLoss: slNum,
-        takeProfit: tpNum,
-        riskPercent,
-      },
-    });
-    setPendingDir(null);
-  };
-
-  const handleWait = () => {
-    if (!scenario) return;
-    setDecision("wait");
-    submitTrade.mutate({
-      data: { scenarioId: scenario.id, direction: "wait", riskPercent },
-    });
-  };
-
-  const nextScenario = () => {
-    setDecision(null);
-    setPendingDir(null);
-    setReplayStep(0);
-    submitTrade.reset();
-    createScenario.mutate();
-  };
+  const done = completedCount(simProgress);
+  const nextId = nextMissionId(simProgress, MISSIONS.length);
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Session en cours</h1>
-        <div className="bg-secondary px-4 py-2 rounded-lg font-mono font-bold text-lg">
-          {(scenario?.balance || 10000).toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })}
+    <div className="flex flex-col gap-8">
+      {/* Header */}
+      <header className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+        <div className="space-y-1.5">
+          <h1 className="text-3xl font-extrabold tracking-tight">Simulateur</h1>
+          <p className="text-sm text-muted-foreground max-w-sm leading-relaxed">
+            Entraîne-toi en conditions réelles, sans risquer un centime. Le marché, tes choix, ton journal.
+          </p>
         </div>
+        <div className="flex items-center gap-3">
+          <div className="flex flex-col items-end rounded-xl border border-border/50 bg-card/40 px-4 py-2.5 shadow-sm">
+            <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Capital virtuel</span>
+            <span className="font-mono font-bold text-foreground" data-testid="text-capital">
+              {CAPITAL.toLocaleString("fr-FR", {
+                style: "currency",
+                currency: "EUR",
+                maximumFractionDigits: 0,
+              })}
+            </span>
+          </div>
+          <div className="flex flex-col items-end rounded-xl border border-primary/20 bg-primary/5 px-4 py-2.5 shadow-sm">
+            <span className="text-[10px] font-semibold uppercase tracking-wider text-primary/80">XP Missions</span>
+            <span className="font-mono font-bold text-primary" data-testid="text-sim-xp">
+              {simProgress.totalXp}
+            </span>
+          </div>
+        </div>
+      </header>
+
+      {/* Modes Principaux */}
+      <div className="grid gap-4 md:grid-cols-2">
+        <Link
+          href={`/simulateur/mission/${nextId}`}
+          className="group relative overflow-hidden rounded-2xl border border-primary/30 bg-card p-6 transition-all hover:border-primary/60 hover:shadow-lg hover:shadow-primary/5"
+          data-testid="card-mode-missions"
+        >
+          <div className="absolute top-0 right-0 p-6 opacity-10 transition-transform duration-500 group-hover:scale-110 group-hover:opacity-20">
+            <Target className="w-24 h-24 text-primary" />
+          </div>
+          <div className="relative z-10">
+            <div className="flex items-start justify-between">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary shadow-inner">
+                <Target className="h-6 w-6" />
+              </div>
+              <span className="rounded-full border border-primary/20 bg-primary/10 px-3 py-1 font-mono text-xs font-bold text-primary">
+                {done}/{MISSIONS.length}
+              </span>
+            </div>
+            <h2 className="mt-5 text-xl font-bold">Missions guidées</h2>
+            <p className="mt-2 text-sm text-muted-foreground max-w-[280px] leading-relaxed">
+              Apprends en tradant : scénarios encadrés, objectif clair et débriefing noté par le coach.
+            </p>
+            <div className="mt-6 flex items-center gap-2 font-bold text-primary">
+              {done === 0 ? "Commencer le parcours" : done >= MISSIONS.length ? "Rejouer les missions" : "Continuer la mission"}
+              <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </div>
+          </div>
+        </Link>
+
+        <Link
+          href="/simulateur/libre"
+          className="group relative overflow-hidden rounded-2xl border border-border/60 bg-card p-6 transition-all hover:border-foreground/20 hover:bg-card/80 hover:shadow-lg"
+          data-testid="card-mode-libre"
+        >
+          <div className="absolute top-0 right-0 p-6 opacity-5 transition-transform duration-500 group-hover:scale-110 group-hover:opacity-10">
+            <Activity className="w-24 h-24 text-foreground" />
+          </div>
+          <div className="relative z-10">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-secondary text-foreground shadow-inner">
+              <Activity className="h-6 w-6" />
+            </div>
+            <h2 className="mt-5 text-xl font-bold">Mode Libre</h2>
+            <p className="mt-2 text-sm text-muted-foreground max-w-[280px] leading-relaxed">
+              Le bac à sable. Trade ton capital virtuel sans consigne, et construis ton journal de trading.
+            </p>
+            <div className="mt-6 flex items-center gap-2 font-bold text-foreground">
+              S'entraîner
+              <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </div>
+          </div>
+        </Link>
       </div>
 
-      {scenario && (
-        <div className="space-y-6">
-          <div className="flex items-center justify-between text-sm text-muted-foreground font-medium">
-             <span>{scenario.market}</span>
-             <span>{scenario.timeframe}</span>
+      {/* Modes à venir */}
+      <div className="grid gap-4 sm:grid-cols-3">
+        {[
+          {
+            icon: ScanLine,
+            title: "Analyse",
+            desc: "Entraîne ton œil : tendances, niveaux, structures.",
+          },
+          {
+            icon: Trophy,
+            title: "Challenges",
+            desc: "Défis chronométrés pour tester tes réflexes.",
+          },
+          {
+            icon: History,
+            title: "Backtest",
+            desc: "Rejoue des marchés passés et vérifie tes idées.",
+          },
+        ].map(({ icon: Icon, title, desc }) => (
+          <div
+            key={title}
+            className="group rounded-2xl border border-border/40 bg-card/20 p-5 transition-colors hover:border-border/60"
+            data-testid={`card-mode-${title.toLowerCase()}`}
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary/50 text-muted-foreground">
+                <Icon className="h-5 w-5 opacity-50" />
+              </div>
+              <span className="flex items-center gap-1.5 rounded-full border border-border/50 bg-secondary/30 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                <Lock className="h-3 w-3" /> Bientôt
+              </span>
+            </div>
+            <h3 className="mt-4 font-bold text-muted-foreground/80">{title}</h3>
+            <p className="mt-1 text-xs text-muted-foreground/60 leading-relaxed">{desc}</p>
           </div>
+        ))}
+      </div>
+
+      {/* Liste des missions */}
+      <section className="space-y-5">
+        <h2 className="text-xl font-bold tracking-tight">Le Dojo (10 missions)</h2>
+        <div className="relative">
+          {/* Vertical path line */}
+          <div className="absolute left-[27px] top-4 bottom-4 w-px bg-border/40 md:left-[31px]" />
           
-          <SimpleCandleChart 
-            candles={scenario.candles} 
-            future={result?.futureCandles || []} 
-            step={replayStep} 
-          />
-
-          {!result && !submitTrade.isPending && !pendingDir && (
-             <div className="grid grid-cols-3 gap-4">
-               <button data-testid="button-buy" onClick={() => openTicket("buy")} className="flex flex-col items-center justify-center gap-2 bg-card border border-border p-4 rounded-xl hover:border-success hover:bg-success/5 transition-all text-success">
-                 <ArrowUpCircle className="w-8 h-8" />
-                 <span className="font-bold">Acheter</span>
-               </button>
-               <button data-testid="button-wait" onClick={handleWait} className="flex flex-col items-center justify-center gap-2 bg-card border border-border p-4 rounded-xl hover:border-muted-foreground hover:bg-secondary transition-all text-muted-foreground">
-                 <Clock className="w-8 h-8" />
-                 <span className="font-bold">Patienter</span>
-               </button>
-               <button data-testid="button-sell" onClick={() => openTicket("sell")} className="flex flex-col items-center justify-center gap-2 bg-card border border-border p-4 rounded-xl hover:border-destructive hover:bg-destructive/5 transition-all text-destructive">
-                 <ArrowDownCircle className="w-8 h-8" />
-                 <span className="font-bold">Vendre</span>
-               </button>
-             </div>
-          )}
-
-          {!result && !submitTrade.isPending && pendingDir && (
-            <div className="bg-card border border-border rounded-xl p-5 space-y-4 animate-in fade-in duration-300">
-              <div className="flex items-center justify-between">
-                <h2 className={cn("font-bold text-lg", pendingDir === "buy" ? "text-success" : "text-destructive")}>
-                  {pendingDir === "buy" ? "Position acheteuse" : "Position vendeuse"}
-                </h2>
-                <span className="text-sm text-muted-foreground font-mono">Entrée : {lastClose.toLocaleString("fr-FR", { maximumFractionDigits: 4 })}</span>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <label className="space-y-1.5">
-                  <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Stop Loss</span>
-                  <input data-testid="input-stop-loss" type="number" step="any" value={stopLoss} onChange={(e) => setStopLoss(e.target.value)}
-                    className="w-full bg-background border border-border rounded-lg px-3 py-2.5 font-mono text-sm focus:outline-none focus:border-destructive" />
-                </label>
-                <label className="space-y-1.5">
-                  <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Take Profit</span>
-                  <input data-testid="input-take-profit" type="number" step="any" value={takeProfit} onChange={(e) => setTakeProfit(e.target.value)}
-                    className="w-full bg-background border border-border rounded-lg px-3 py-2.5 font-mono text-sm focus:outline-none focus:border-success" />
-                </label>
-              </div>
-              <div className="space-y-1.5">
-                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Risque par trade</span>
-                <div className="flex gap-2">
-                  {[0.5, 1, 2].map((r) => (
-                    <button key={r} data-testid={`button-risk-${r}`} onClick={() => setRiskPercent(r)}
-                      className={cn("flex-1 py-2 rounded-lg text-sm font-bold border transition-colors",
-                        riskPercent === r ? "bg-primary text-primary-foreground border-primary" : "bg-background border-border text-muted-foreground hover:border-primary/50")}>
-                      {r} %
-                    </button>
-                  ))}
-                </div>
-              </div>
-              {!ticketValid && (
-                <p className="text-xs text-destructive font-medium">
-                  {pendingDir === "buy"
-                    ? "Pour un achat : Stop Loss sous le prix d'entrée, Take Profit au-dessus."
-                    : "Pour une vente : Stop Loss au-dessus du prix d'entrée, Take Profit en dessous."}
-                </p>
-              )}
-              <div className="flex gap-3">
-                <button data-testid="button-cancel-ticket" onClick={() => setPendingDir(null)}
-                  className="flex-1 py-3 rounded-xl font-bold bg-secondary text-muted-foreground hover:bg-secondary/70 transition-colors">
-                  Annuler
-                </button>
-                <button data-testid="button-confirm-trade" onClick={confirmTrade} disabled={!ticketValid}
-                  className={cn("flex-1 py-3 rounded-xl font-bold transition-colors disabled:opacity-40 disabled:cursor-not-allowed",
-                    pendingDir === "buy" ? "bg-success text-white hover:bg-success/90" : "bg-destructive text-white hover:bg-destructive/90")}>
-                  Confirmer
-                </button>
-              </div>
-            </div>
-          )}
-
-          {submitTrade.isPending && (
-            <div className="text-center py-8 text-muted-foreground animate-pulse">
-              Analyse du marché en cours...
-            </div>
-          )}
-
-          {result && (
-            <div className="bg-card border border-border rounded-xl p-6 space-y-6 animate-in fade-in duration-500">
-               {/* Replay Controls */}
-               <div className="flex items-center justify-center gap-4">
-                 <button className="p-2 rounded-full hover:bg-secondary text-muted-foreground" onClick={() => setReplayStep(Math.max(0, replayStep - 1))}><RotateCcw className="w-5 h-5" /></button>
-                 <button className="p-3 rounded-full bg-primary text-primary-foreground" onClick={() => setReplayStep(Math.min(result.futureCandles.length, replayStep + 1))}><FastForward className="w-6 h-6" /></button>
-                 <span className="text-sm font-mono text-muted-foreground min-w-[40px] text-center">{replayStep} / {result.futureCandles.length}</span>
-               </div>
-
-               {replayStep === result.futureCandles.length && (
-                 <div className="space-y-4 animate-in slide-in-from-bottom-4">
-                   <div className={cn(
-                     "p-4 rounded-lg font-bold text-center text-lg border",
-                     result.pnl > 0 ? "bg-success/10 border-success/20 text-success" : 
-                     result.pnl < 0 ? "bg-destructive/10 border-destructive/20 text-destructive" :
-                     "bg-secondary border-border text-foreground"
-                   )}>
-                     Résultat: {result.pnl > 0 ? '+' : ''}{result.pnl.toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })}
-                   </div>
-                   
-                   <div className="space-y-2">
-                     <h3 className="font-bold">Analyse du Coach</h3>
-                     <ul className="space-y-2">
-                       {result.feedback.map((line, i) => (
-                         <li key={i} className="text-sm text-muted-foreground flex items-start gap-2">
-                           <span className="text-primary mt-0.5">•</span>
-                           <span>{line}</span>
-                         </li>
-                       ))}
-                     </ul>
-                   </div>
-
-                   <button onClick={nextScenario} className="w-full py-3 bg-primary text-primary-foreground rounded-xl font-bold mt-4">
-                     Scénario Suivant
-                   </button>
-                 </div>
-               )}
-            </div>
-          )}
+          <ul className="space-y-4">
+            {MISSIONS.map((mission, index) => {
+              const record = simProgress.missions[mission.id];
+              const unlocked =
+                mission.id === 1 || !!simProgress.missions[mission.id - 1];
+              const isNext = unlocked && !record;
+              
+              return (
+                <motion.li 
+                  key={mission.id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: index * 0.05 }}
+                  className="relative z-10"
+                >
+                  {unlocked ? (
+                    <Link
+                      href={`/simulateur/mission/${mission.id}`}
+                      className={cn(
+                        "flex items-center gap-4 rounded-2xl border bg-card p-4 transition-all hover:shadow-md",
+                        isNext ? "border-primary/50 hover:border-primary shadow-sm shadow-primary/5" : "border-border/60 hover:border-border"
+                      )}
+                      data-testid={`card-mission-${mission.id}`}
+                    >
+                      <MissionBadge id={mission.id} done={!!record} active={isNext} />
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2">
+                          <span className={cn("truncate font-bold", isNext ? "text-foreground" : "text-foreground/90")}>
+                            {mission.title}
+                          </span>
+                        </div>
+                        <div className="mt-1 flex flex-wrap items-center gap-x-2 text-xs text-muted-foreground">
+                          <span className={cn("font-medium", 
+                            mission.difficulty === "debutant" ? "text-success/80" : 
+                            mission.difficulty === "intermediaire" ? "text-primary/80" : "text-destructive/80"
+                          )}>
+                            {DIFFICULTY_LABELS[mission.difficulty]}
+                          </span>
+                          <span className="opacity-50">•</span>
+                          <span className="font-mono text-[11px]">{mission.symbol}</span>
+                          <span className="opacity-50">•</span>
+                          <span className="font-mono text-[11px]">{mission.timeframe}</span>
+                        </div>
+                        <p className="mt-1.5 text-xs text-muted-foreground/80 line-clamp-1">
+                          {mission.learningObjective}
+                        </p>
+                      </div>
+                      <div className="shrink-0 flex items-center gap-3">
+                        {record ? (
+                          <div className="flex flex-col items-end gap-1">
+                            <span className={cn("rounded-lg px-2.5 py-1 font-mono text-xs font-bold",
+                              record.bestScore >= 8 ? "bg-success/10 text-success" : 
+                              record.bestScore >= 5 ? "bg-primary/10 text-primary" : "bg-destructive/10 text-destructive"
+                            )}>
+                              {record.bestScore.toLocaleString("fr-FR")}/10
+                            </span>
+                          </div>
+                        ) : isNext ? (
+                          <span className="flex items-center gap-1.5 rounded-full bg-primary px-3 py-1.5 text-xs font-bold text-primary-foreground shadow-sm">
+                            <Play className="h-3.5 w-3.5 fill-current" /> Jouer
+                          </span>
+                        ) : (
+                          <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                        )}
+                      </div>
+                    </Link>
+                  ) : (
+                    <div
+                      className="flex items-center gap-4 rounded-2xl border border-border/30 bg-card/20 p-4 opacity-50 grayscale-[0.5]"
+                      data-testid={`card-mission-${mission.id}`}
+                    >
+                      <MissionBadge id={mission.id} done={false} locked />
+                      <div className="min-w-0 flex-1">
+                        <span className="font-bold text-muted-foreground">
+                          {mission.title}
+                        </span>
+                        <div className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground">
+                          <Lock className="h-3 w-3" />
+                          Termine la mission {mission.id - 1} pour débloquer
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </motion.li>
+              );
+            })}
+          </ul>
         </div>
-      )}
+      </section>
+
+      <div className="flex items-center justify-center py-6">
+        <p className="max-w-md text-center text-xs text-muted-foreground/60 leading-relaxed">
+          Simulation uniquement — aucun argent réel n'est utilisé.<br/>
+          Les performances passées, même simulées, ne préjugent pas de résultats futurs.
+        </p>
+      </div>
     </div>
   );
 }
 
-function ActivityIcon(props: any) {
-  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+function MissionBadge({
+  id,
+  done,
+  locked,
+  active
+}: {
+  id: number;
+  done: boolean;
+  locked?: boolean;
+  active?: boolean;
+}) {
+  return (
+    <div
+      className={cn(
+        "flex h-14 w-14 md:h-16 md:w-16 shrink-0 items-center justify-center rounded-2xl font-mono text-lg font-bold shadow-sm transition-all",
+        done
+          ? "bg-success/10 text-success border border-success/20"
+          : active
+            ? "bg-primary text-primary-foreground shadow-primary/20 scale-105"
+            : locked
+              ? "bg-secondary/50 text-muted-foreground border border-border/30"
+              : "bg-card text-foreground border border-border"
+      )}
+    >
+      {done ? <Check className="h-6 w-6 stroke-[3]" /> : id}
+    </div>
+  );
 }
