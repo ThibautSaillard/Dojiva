@@ -1,3 +1,4 @@
 - [Orval zod codegen needs zod/v4 import](orval-zod-v4.md) — Orval v8 emits `zod.int()`; the codegen script's sed rewrite to `zod/v4` must stay or typecheck:libs breaks after codegen.
 - [GitHub push fallback](github-push-fallback.md) — gitPush says NO_CREDENTIALS here; push via the GitHub connector's oauth access_token instead (repo ThibautSaillard/Dojiva).
 - [Manual vite builds](artifact-manual-builds.md) — artifact builds run from the shell need PORT and BASE_PATH set; workflows inject them, manual commands don't.
+- [Design subagent contract drift](design-subagent-contracts.md) — after a design pass, re-run typecheck and diff data-testids; framer-motion ease arrays need tuple casts.
