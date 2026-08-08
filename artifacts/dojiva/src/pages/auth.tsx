@@ -341,7 +341,7 @@ function AuthCard({ mode }: { mode: AuthMode }) {
 
 function AuthShell({ mode }: { mode: AuthMode }) {
   return (
-    <div className="flex min-h-[100dvh] items-center justify-center bg-background px-4 py-8">
+    <div className="flex min-h-[calc(100dvh-4rem)] items-center justify-center bg-background px-4 py-8">
       <AuthCard mode={mode} />
     </div>
   );

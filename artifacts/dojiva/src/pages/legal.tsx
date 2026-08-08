@@ -367,7 +367,7 @@ export function LegalDocument() {
 
 function LegalShell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-[100dvh] bg-background text-foreground">
+    <div className="min-h-[calc(100dvh-4rem)] bg-background text-foreground">
       <div className="border-b border-border bg-background/80 px-5 py-5 backdrop-blur-xl sm:px-8">
         <div className="mx-auto flex max-w-4xl items-center justify-between gap-4">
           <Link href="/" className="flex items-center gap-2 text-xl font-black tracking-tight">

@@ -33,7 +33,7 @@ export default function Payment() {
   const [selected, setSelected] = useState("pro");
 
   return (
-    <div className="min-h-[100dvh] bg-background px-4 py-8 sm:px-6">
+    <div className="min-h-[calc(100dvh-4rem)] bg-background px-4 py-8 sm:px-6">
       <div className="mx-auto max-w-4xl">
         <Link href="/academie" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
           <ArrowLeft className="h-4 w-4" /> Retour au parcours
@@ -107,7 +107,7 @@ export function PaymentCheckout() {
   const plan = params.get("plan") || "pro";
 
   return (
-    <div className="min-h-[100dvh] bg-background px-4 py-8 sm:px-6">
+    <div className="min-h-[calc(100dvh-4rem)] bg-background px-4 py-8 sm:px-6">
       <div className="mx-auto max-w-lg">
         <Link href="/paiement" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
           <ArrowLeft className="h-4 w-4" /> Modifier la formule

@@ -100,7 +100,7 @@ export default function Onboarding() {
 
   if (isGenerating) {
     return (
-      <div className="min-h-[100dvh] flex flex-col items-center justify-center p-6 text-center">
+      <div className="min-h-[calc(100dvh-4rem)] flex flex-col items-center justify-center p-6 text-center">
         <div className="w-16 h-16 rounded-full border-4 border-primary border-t-transparent animate-spin mb-8" />
         <h2 className="text-2xl font-bold mb-2">Ok. On sait où commencer.</h2>
         <p className="text-muted-foreground">Ton parcours est prêt.</p>
@@ -110,7 +110,7 @@ export default function Onboarding() {
 
   if (stepIndex === -1) {
     return (
-      <div className="min-h-[100dvh] flex flex-col items-center justify-center p-6 text-center">
+      <div className="min-h-[calc(100dvh-4rem)] flex flex-col items-center justify-center p-6 text-center">
         <h1 className="text-4xl font-bold mb-4">Tu pars de zéro ?</h1>
         <p className="text-xl text-muted-foreground mb-12">Aucun problème. On commence vraiment au début.</p>
         <button 
@@ -129,7 +129,7 @@ export default function Onboarding() {
   const canProceed = isMulti ? currentAnswer.length > 0 : !!currentAnswer;
 
   return (
-    <div className="min-h-[100dvh] flex flex-col p-6 max-w-2xl mx-auto w-full">
+    <div className="min-h-[calc(100dvh-4rem)] flex flex-col p-6 max-w-2xl mx-auto w-full">
       <header className="flex items-center justify-between mb-8">
         <button 
           onClick={() => setStepIndex(stepIndex - 1)} 

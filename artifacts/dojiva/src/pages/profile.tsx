@@ -1,10 +1,27 @@
+import { useState } from "react";
+import { useLocation } from "wouter";
 import { useGetProgress, useListBadges } from "@workspace/api-client-react";
-import { User, Flame, Zap, Trophy } from "lucide-react";
+import { User, Flame, Zap, Trophy, LogOut, LogIn, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/lib/auth-context";
 
 export default function Profile() {
   const { data: progress, isLoading: progressLoading } = useGetProgress();
   const { data: badges, isLoading: badgesLoading } = useListBadges();
+  const { user, signOut } = useAuth();
+  const [, setLocation] = useLocation();
+  const [signingOut, setSigningOut] = useState(false);
+
+  async function handleLogout() {
+    if (signingOut) return;
+    setSigningOut(true);
+    try {
+      await signOut();
+      setLocation("/");
+    } finally {
+      setSigningOut(false);
+    }
+  }
 
   if (progressLoading || badgesLoading || !progress || !badges) {
     return (
@@ -16,6 +33,8 @@ export default function Profile() {
 
   return (
     <div className="flex flex-col gap-8 pb-8">
+      <h1 className="text-3xl font-bold tracking-tight" data-testid="text-page-title">Paramètres</h1>
+
       {/* Header Profile */}
       <div className="flex flex-col items-center text-center p-6 bg-card border border-border rounded-3xl">
         <div className="w-24 h-24 rounded-full bg-secondary flex items-center justify-center mb-4 relative">
@@ -75,6 +94,51 @@ export default function Profile() {
               <div className="text-[10px] font-bold uppercase leading-tight line-clamp-2">{badge.title}</div>
             </div>
           ))}
+        </div>
+      </div>
+
+      {/* Compte */}
+      <div>
+        <h2 className="text-xl font-bold mb-4">Compte</h2>
+        <div className="p-5 rounded-2xl bg-card border border-border flex flex-col gap-4">
+          {user ? (
+            <>
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center shrink-0">
+                  <User className="w-5 h-5 text-muted-foreground" />
+                </div>
+                <div className="min-w-0">
+                  <div className="text-xs text-muted-foreground font-medium uppercase tracking-wider">Connecté avec</div>
+                  <div className="text-sm font-semibold truncate" data-testid="text-account-email">{user.email}</div>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={handleLogout}
+                disabled={signingOut}
+                className="flex items-center justify-center gap-2 w-full px-4 py-3 rounded-xl border border-destructive/30 text-destructive font-bold text-sm hover:bg-destructive/10 transition-colors disabled:opacity-60"
+                data-testid="button-logout"
+              >
+                {signingOut ? <Loader2 className="w-4 h-4 animate-spin" /> : <LogOut className="w-4 h-4" />}
+                Se déconnecter
+              </button>
+            </>
+          ) : (
+            <>
+              <p className="text-sm text-muted-foreground">
+                Tu n'es pas connecté. Crée un compte pour sauvegarder ta progression.
+              </p>
+              <button
+                type="button"
+                onClick={() => setLocation("/sign-in")}
+                className="flex items-center justify-center gap-2 w-full px-4 py-3 rounded-xl bg-primary text-primary-foreground font-bold text-sm hover:bg-primary/90 transition-colors"
+                data-testid="button-go-login"
+              >
+                <LogIn className="w-4 h-4" />
+                Se connecter
+              </button>
+            </>
+          )}
         </div>
       </div>
 

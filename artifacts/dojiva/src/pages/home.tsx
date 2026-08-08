@@ -97,21 +97,7 @@ export default function Home() {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-primary/20 blur-[120px] rounded-full" />
       </div>
       
-      <header className="px-6 py-6 flex items-center justify-between relative z-10">
-        <div className="flex items-center gap-2 font-bold text-2xl tracking-tight">
-          <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-            <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-            </svg>
-          </div>
-          Dojiva
-        </div>
-        <Link href="/sign-in" className="text-sm font-semibold bg-secondary px-4 py-2 rounded-lg hover:bg-secondary/80 transition-colors">
-          Connexion
-        </Link>
-      </header>
-
-      <main className="flex-1 flex flex-col items-center justify-center px-4 py-6 md:py-20 text-center relative z-10">
+      <main className="flex-1 flex flex-col items-center justify-center px-4 py-10 md:py-20 text-center relative z-10">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs md:text-sm font-semibold mb-4 md:mb-8 border border-primary/20">
           <Zap className="w-3.5 h-3.5 md:w-4 md:h-4" /> La nouvelle école du trading
         </div>
@@ -333,7 +319,7 @@ function FAQSection({
   onToggle: (index: number) => void;
 }) {
   return (
-    <section className="mt-24 w-full max-w-3xl text-left sm:mt-32" aria-labelledby="faq-title">
+    <section id="faq" className="mt-24 w-full max-w-3xl scroll-mt-24 text-left sm:mt-32" aria-labelledby="faq-title">
       <div className="mb-8 text-center">
         <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.22em] text-primary">Questions fréquentes</p>
         <h2 id="faq-title" className="text-3xl font-extrabold tracking-tight sm:text-5xl">

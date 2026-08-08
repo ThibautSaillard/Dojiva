@@ -50,7 +50,7 @@ export default function Lesson() {
 
   if (isLoading || !lesson || !progress) {
     return (
-      <div className="min-h-[100dvh] flex items-center justify-center bg-background">
+      <div className="min-h-[calc(100dvh-4rem)] flex items-center justify-center bg-background">
         <div className="w-8 h-8 rounded-full border-2 border-primary border-t-transparent animate-spin"></div>
       </div>
     );
@@ -101,7 +101,7 @@ export default function Lesson() {
 
   if (completeLesson.isPending || (completeLesson.isSuccess && !showPaywall)) {
     return (
-      <div className="min-h-[100dvh] flex flex-col items-center justify-center p-6 text-center animate-in fade-in zoom-in duration-500">
+      <div className="min-h-[calc(100dvh-4rem)] flex flex-col items-center justify-center p-6 text-center animate-in fade-in zoom-in duration-500">
         <div className="w-24 h-24 bg-success/20 rounded-full flex items-center justify-center mb-6">
           <Check className="w-12 h-12 text-success" />
         </div>
@@ -112,7 +112,7 @@ export default function Lesson() {
   }
 
   return (
-    <div className="min-h-[100dvh] flex flex-col bg-background font-sans text-foreground">
+    <div className="min-h-[calc(100dvh-4rem)] flex flex-col bg-background font-sans text-foreground">
       <header className="px-6 py-4 flex items-center gap-4">
         <button onClick={() => setLocation("/academie")} className="p-2 rounded-lg hover:bg-secondary text-muted-foreground transition-colors">
           <X className="w-6 h-6" />
@@ -122,7 +122,8 @@ export default function Lesson() {
         </div>
       </header>
 
-      <main className="flex-1 max-w-2xl mx-auto w-full p-6 flex flex-col justify-center">
+      {/* pb-44 : réserve la hauteur de la barre d'action fixe en bas (feedback inclus). */}
+      <main className="flex-1 max-w-2xl mx-auto w-full p-6 pb-44 flex flex-col justify-center">
         <div className="mb-10 animate-in slide-in-from-bottom-4 duration-500">
           <h2 className="text-2xl md:text-3xl font-bold leading-tight mb-4">{currentStep.prompt}</h2>
           {currentStep.body && (
