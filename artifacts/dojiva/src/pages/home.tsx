@@ -103,18 +103,18 @@ export default function Home() {
         </div>
         
         <h1 className="text-[2.1rem] leading-[1.1] md:text-6xl font-bold tracking-tighter mb-3 md:mb-4 max-w-4xl md:leading-tight">
-          Apprends le trading <br/>
+          Apprends à trader. <br/>
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-400">
-            sans te prendre la tête.
+            Sans les fausses promesses.
           </span>
         </h1>
         
         <p className="text-sm leading-relaxed md:text-lg text-muted-foreground mb-5 md:mb-6 max-w-2xl">
-          De "c'est quoi cette bougie ?" à "je sais exactement ce que je regarde." Des leçons courtes, de vrais graphiques, zéro blabla.
+          De vrais graphiques, une vraie progression, à ton rythme.
         </p>
 
         <Link href="/sign-up" className="group flex items-center gap-2 bg-primary text-primary-foreground px-7 py-3.5 md:px-8 md:py-4 rounded-xl text-base md:text-lg font-bold hover:bg-primary/90 transition-all shadow-xl shadow-primary/25 hover:scale-105 mb-8 md:mb-10">
-          Créer mon compte
+          Découvrir
           <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
         </Link>
 
